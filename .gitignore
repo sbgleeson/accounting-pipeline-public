@@ -1,1 +1,31 @@
 venv/
+
+.DS_Store
+**/.DS_Store
+
+# Local financial source files stay private.
+/input/raw/
+/input/test_month/
+/input/*.xlsx
+
+# Keep reusable pipeline templates in version control.
+!input/template/
+!input/template/*.csv
+/input/template/accounts.csv
+!/input/template/accounts.example.csv
+
+# Generated outputs are reproducible.
+/output/
+/profiles/*/output/
+
+# Real-user profiles remain fully local. Fictional demo profiles may be tracked.
+/profiles/*
+!/profiles/demo-jordan-lee/
+!/profiles/demo-jordan-lee/**
+/profiles/demo-jordan-lee/output/
+
+# Private planning notes can contain real household details.
+/docs/budget-meeting-notes.md
+
+~$*.xlsx
+**/~$*.xlsx

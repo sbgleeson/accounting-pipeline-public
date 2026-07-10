@@ -1,0 +1,6 @@
+setting,value
+income_transfer_source_bucket,Personal
+income_transfer_destination_bucket,Household
+credit_bucket,Credit
+income_transfer_review_start_year,2025
+enable_income_routing_review,false

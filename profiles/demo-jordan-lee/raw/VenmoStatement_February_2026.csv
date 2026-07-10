@@ -1,0 +1,6 @@
+Account Statement - February 2026,,,,,,,,,,,
+Synthetic demo data only,,,,,,,,,,,
+ID,Datetime,Type,Status,Note,From,To,Amount (total),Funding Source,Destination,Beginning Balance,Ending Balance
+,,,,,,,,,,,
+demo-feb-001,2026-02-14T10:15:00,Payment,Complete,Freelance paycheck - February design invoice,Cedar Labs,Jordan Lee,+ $600.00,Cedar Labs balance,,0.00,600.00
+demo-feb-002,2026-02-16T09:30:00,Standard Transfer,Complete,Transfer to bank,Jordan Lee,Jordan Lee,- $600.00,Venmo balance,JPMORGAN CHASE *4101,600.00,0.00

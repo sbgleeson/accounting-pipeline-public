@@ -1,0 +1,22 @@
+match_type,match_value,canonical_merchant,category
+contains,ROSE CITY APARTMENTS,ROSE CITY APARTMENTS,Housing – Mortgage(s) or Rent
+contains,PACIFIC POWER,PACIFIC POWER,Housing – Utilities: Electric
+contains,CASCADE INTERNET,CASCADE INTERNET,Housing – Utilities: Internet
+contains,PORTLAND WATER,PORTLAND WATER,Housing – Utilities: Water
+contains,NEW SEASONS,NEW SEASONS,Food – Groceries
+contains,MARKET OF CHOICE,MARKET OF CHOICE,Food – Groceries
+contains,STUMPTOWN,STUMPTOWN COFFEE,Food – Coffee / Cafes
+contains,PINE STREET BISTRO,PINE STREET BISTRO,Food – Dining Out
+contains,DOORDASH,DOORDASH,Food – Takeout / Delivery
+contains,TRIMET,TRIMET,Auto + Transport – Public Transit
+contains,SHELL,SHELL,Auto + Transport – Fuel
+contains,STREAMFLIX,STREAMFLIX,Entertainment – Streaming
+contains,POWELLS BOOKS,POWELL'S BOOKS,Entertainment – Books / Media
+contains,CLOUDNOTE,CLOUDNOTE,Shopping – Software / Digital Services
+contains,TECH DEPOT,TECH DEPOT,Shopping – Technology / Electronics
+contains,COMMUNITY FOOD FUND,COMMUNITY FOOD FUND,Giving – Charitable Giving
+contains,VANGUARD BROKERAGE,VANGUARD BROKERAGE,Investing – Brokerage Contribution
+contains,PAYMENT THANK YOU,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,PAYMENT TO CHASE CARD,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,INTEREST PAYMENT,INTEREST PAYMENT,Income – Interest
+contains,VENMO CASHOUT,VENMO CASHOUT,Transfers – Zelle / Peer Transfer

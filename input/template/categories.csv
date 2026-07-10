@@ -1,0 +1,75 @@
+main_category,sub_category,combined
+Housing,Mortgage(s) or Rent,Housing – Mortgage(s) or Rent
+Housing,Homeowners/Renters Insurance,Housing – Homeowners/Renters Insurance
+Housing,Property Taxes,Housing – Property Taxes
+Housing,Utilities: Electric,Housing – Utilities: Electric
+Housing,Utilities: Gas,Housing – Utilities: Gas
+Housing,Utilities: Water,Housing – Utilities: Water
+Housing,Utilities: Internet,Housing – Utilities: Internet
+Housing,Utilities: Mobile Phone,Housing – Utilities: Mobile Phone
+Housing,Repairs,Housing – Repairs
+Housing,Household Supplies,Housing – Household Supplies
+Housing,Other,Housing – Other
+Food,Groceries,Food – Groceries
+Food,Dining Out,Food – Dining Out
+Food,Coffee / Cafes,Food – Coffee / Cafes
+Food,Takeout / Delivery,Food – Takeout / Delivery
+Food,Other,Food – Other
+Auto + Transport,Public Transit,Auto + Transport – Public Transit
+Auto + Transport,Parking / Tolls,Auto + Transport – Parking / Tolls
+Auto + Transport,Fuel,Auto + Transport – Fuel
+Auto + Transport,Insurance,Auto + Transport – Insurance
+Auto + Transport,Maintenance,Auto + Transport – Maintenance
+Auto + Transport,Rideshare / Taxi,Auto + Transport – Rideshare / Taxi
+Auto + Transport,Other,Auto + Transport – Other
+Travel,Train,Travel – Train
+Travel,Flights,Travel – Flights
+Travel,Lodging,Travel – Lodging
+Travel,Local Transit While Traveling,Travel – Local Transit While Traveling
+Travel,Other,Travel – Other
+Health,Health Insurance,Health – Health Insurance
+Health,Medical / Dental,Health – Medical / Dental
+Health,Pharmacy,Health – Pharmacy
+Health,Therapy / Mental Health,Health – Therapy / Mental Health
+Health,Other,Health – Other
+Shopping,Household,Shopping – Household
+Shopping,Personal,Shopping – Personal
+Shopping,Clothing,Shopping – Clothing
+Shopping,Technology / Electronics,Shopping – Technology / Electronics
+Shopping,Software / Digital Services,Shopping – Software / Digital Services
+Shopping,Gifts,Shopping – Gifts
+Shopping,Other,Shopping – Other
+Entertainment,Streaming,Entertainment – Streaming
+Entertainment,Events / Admissions,Entertainment – Events / Admissions
+Entertainment,Books / Media,Entertainment – Books / Media
+Entertainment,Hobbies,Entertainment – Hobbies
+Entertainment,Other,Entertainment – Other
+Financial,Credit Card Payment,Financial – Credit Card Payment
+Financial,Bank Fees,Financial – Bank Fees
+Financial,Legal Fees,Financial – Legal Fees
+Financial,Interest Income,Financial – Interest Income
+Financial,Tax Payments,Financial – Tax Payments
+Financial,Other,Financial – Other
+Transfers,Internal Transfer,Transfers – Internal Transfer
+Transfers,Zelle / Peer Transfer,Transfers – Zelle / Peer Transfer
+Transfers,Savings Transfer,Transfers – Savings Transfer
+Transfers,Other,Transfers – Other
+Savings,Emergency Fund,Savings – Emergency Fund
+Savings,House / Home Fund,Savings – House / Home Fund
+Savings,Travel Fund,Savings – Travel Fund
+Savings,Car Fund,Savings – Car Fund
+Savings,General Savings,Savings – General Savings
+Savings,Other,Savings – Other
+Investing,Brokerage Contribution,Investing – Brokerage Contribution
+Investing,Retirement Contribution,Investing – Retirement Contribution
+Investing,Other,Investing – Other
+Giving,Charitable Giving,Giving – Charitable Giving
+Giving,Gifts,Giving – Gifts
+Giving,Family Support,Giving – Family Support
+Giving,Other,Giving – Other
+Income,Paycheck: Primary Employer,Income – Paycheck: Primary Employer
+Income,Paycheck: Secondary Employer,Income – Paycheck: Secondary Employer
+Income,Unemployment,Income – Unemployment
+Income,Interest,Income – Interest
+Income,Other,Income – Other
+Uncategorized,Needs Review,Uncategorized – Needs Review

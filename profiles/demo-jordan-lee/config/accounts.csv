@@ -1,0 +1,4 @@
+account_id,account_name,account_type,default_bucket,schema,file_match
+4101,Jordan Everyday Checking,checking,Personal,bank,4101
+4102,Jordan Household Savings,savings,Household,bank,4102
+5101,Jordan Rewards Card,credit_card,Credit,card,5101

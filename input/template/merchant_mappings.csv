@@ -1,0 +1,233 @@
+match_type,match_value,canonical_merchant,category
+contains,UBER EATS,UBER EATS,Food – Takeout / Delivery
+contains,UBEREATS,UBER EATS,Food – Takeout / Delivery
+contains,UBR,UBER,Auto + Transport – Rideshare / Taxi
+contains,UBER,UBER,Auto + Transport – Rideshare / Taxi
+contains,AIRINDIAWEB,AIR INDIA,Travel – Flights
+contains,AIR INDIA,AIR INDIA,Travel – Flights
+contains,OPENAI CHATGPT,OPENAI CHATGPT,Shopping – Software / Digital Services
+contains,CHATGPT SUBSCR,OPENAI CHATGPT,Shopping – Software / Digital Services
+contains,CVS RETAIL PHARMACY,CVS,Health – Pharmacy
+contains,CVS,CVS,Health – Pharmacy
+contains,THE JOYCE THEATER,THE JOYCE THEATER,Entertainment – Events / Admissions
+contains,JOYCE THEATER,THE JOYCE THEATER,Entertainment – Events / Admissions
+contains,INTUIT TURBOTAX,INTUIT TURBOTAX,Financial – Tax Payments
+contains,TURBOTAX,INTUIT TURBOTAX,Financial – Tax Payments
+contains,SQ ALCHEMY COFFEE,ALCHEMY COFFEE,Food – Coffee / Cafes
+contains,ALCHEMY COFFEE,ALCHEMY COFFEE,Food – Coffee / Cafes
+contains,SQ THE BREW ROOM,THE BREW ROOM,Food – Coffee / Cafes
+contains,THE BREW ROOM,THE BREW ROOM,Food – Coffee / Cafes
+contains,GELATERIA GENTILE,GELATERIA GENTILE,Food – Coffee / Cafes
+contains,LUCKY LUCKY CAFE,LUCKY LUCKY CAFE,Food – Coffee / Cafes
+contains,LOWES,LOWES,Housing – Repairs
+contains,LOWE S,LOWES,Housing – Repairs
+contains,IRS USATAXPYMT,IRS TAX PAYMENT,Financial – Tax Payments
+contains,COMMWLTHOFPAPATH,PA TAX PAYMENT,Financial – Tax Payments
+contains,PAINDIVLTX,PA TAX PAYMENT,Financial – Tax Payments
+contains,PHILADELPHIA ART MUSE,PHILADELPHIA ART MUSEUM,Entertainment – Events / Admissions
+contains,PMUSA,PARKING,Auto + Transport – Parking / Tolls
+contains,SUNOCO,SUNOCO,Auto + Transport – Fuel
+contains,THE UPS STORE,THE UPS STORE,Shopping – Other
+contains,TRADER JOE S,TRADER JOE S,Food – Groceries
+contains,GIANT HEIRLOOM,GIANT HEIRLOOM,Food – Groceries
+contains,WHOLEFDS,WHOLEFDS,Food – Groceries
+contains,ACME,ACME,Food – Groceries
+contains,ZABARS,ZABARS,Food – Groceries
+contains,INTL FOODS SPICES,INTL FOODS SPICES,Food – Groceries
+contains,PPA ON STREET KIOSKS,PPA ON STREET KIOSKS,Auto + Transport – Parking / Tolls
+contains,PECO ENERGY PAYMENTS,PECO ENERGY PAYMENTS,Housing – Utilities: Electric
+contains,PGW WEBPAY UTILITY,PGW WEBPAY UTILITY,Housing – Utilities: Gas
+contains,CITYOFPHILA WATER,CITYOFPHILA WATER,Housing – Utilities: Water
+contains,COMCAST XFINITY CABLE SVCS,COMCAST XFINITY CABLE SVCS,Housing – Utilities: Internet
+contains,VERIZON BILL PAYMENT,VERIZON BILL PAYMENT,Housing – Utilities: Mobile Phone
+contains,HELP HBOMAX COM HBOMAX COM,HBOMAX,Entertainment – Streaming
+contains,APPLE COM US,APPLE,Shopping – Technology / Electronics
+contains,RECLECTIC,RECLECTIC,Shopping – Household
+contains,VENMO CASHOUT,VENMO CASHOUT,Transfers – Zelle / Peer Transfer
+contains,CHASE CARD PAYMENT,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,PAYMENT THANK YOU,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,CASH REDEMPTION,CASH REDEMPTION,Financial – Other
+contains,SCHWAB BROKERAGE MONEYLINK,SCHWAB BROKERAGE MONEYLINK,Transfers – Other
+contains,TRI POINT ELECTR,TRI-POINT ELECTRIC,Housing – Repairs
+contains,FOREIGN EXCHANGE RATE ADJUSTMENT FEE,FOREIGN EXCHANGE RATE ADJUSTMENT FEE,Travel – Flights
+contains,MTA,MTA,Auto + Transport – Public Transit
+contains,SEPTA,SEPTA,Auto + Transport – Public Transit
+contains,AMTRAK,AMTRAK,Travel – Train
+contains,MAIDO,MAIDO,Food – Dining Out
+contains,GUPSHUP,GUPSHUP,Food – Dining Out
+contains,STARBUCKS,STARBUCKS,Food – Coffee / Cafes
+contains,AMAZON,AMAZON,Shopping – Household
+contains,AMMAS,AMMAS,Food – Dining Out
+contains,LIONS TIGERS,LIONS TIGERS,Food – Dining Out
+contains,ESHEL,ESHEL,Food – Dining Out
+contains,SESAMI,SESAMI,Food – Dining Out
+contains,ITALIA,ITALIA,Food – Dining Out
+contains,WANDERU,WANDERU,Travel – Other
+contains,FOREIGN TRANSACTION FEE,FOREIGN TRANSACTION FEE,Financial – Bank Fees
+contains,CONSUMER ONLINE FX INTL WIRE FEE,CONSUMER ONLINE FX INTL WIRE FEE,Financial – Bank Fees
+contains,ONLINE DOMESTIC WIRE FEE,ONLINE DOMESTIC WIRE FEE,Financial – Bank Fees
+contains,COMPASS ACCOUNT BURNAB,COMPASS CARD,Travel – Local Transit While Traveling
+contains,WEGMANS,WEGMANS,Food – Groceries
+contains,LA FITNESS,LA FITNESS,Health – Other
+contains,MR WISH,MR WISH,Food – Coffee / Cafes
+exact,METRO,METRO,Auto + Transport – Public Transit
+contains,KING COUNTY METRO,KING COUNTY METRO,Auto + Transport – Public Transit
+contains,STAPLES,STAPLES,Shopping – Household
+contains,USCIS,USCIS,Financial – Legal Fees
+contains,HOMEDEPOT,HOME DEPOT,Housing – Repairs
+contains,WALMART,WALMART,Shopping – Household
+contains,WALGREENS,WALGREENS,Health – Pharmacy
+contains,BOOKING COM,BOOKING.COM,Travel – Lodging
+contains,CLAUDE AI,CLAUDE AI,Shopping – Software / Digital Services
+contains,ALDI,ALDI,Food – Groceries
+contains,SOUND TRANSIT,SOUND TRANSIT,Auto + Transport – Public Transit
+contains,GAP ONLINE,GAP,Shopping – Clothing
+contains,ASOS,ASOS,Shopping – Clothing
+contains,VERIZON RECURRING PAY,VERIZON,Housing – Utilities: Internet
+contains,EXPO AMP CONV CTR,EXPO CONVENTION CENTER,Food – Dining Out
+contains,IVY SESSION PAYMENT,IVY SESSION PAYMENT,Health – Therapy / Mental Health
+contains,MEZZOGIORNO MARKET,MEZZOGIORNO MARKET,Food – Dining Out
+contains,FRONTIER AI,FRONTIER AIRLINES,Travel – Flights
+contains,MOBY DICK HOUSE,MOBY DICK HOUSE,Food – Dining Out
+contains,MASALA KITCHEN,MASALA KITCHEN,Food – Dining Out
+contains,GREEK LADY,GREEK LADY,Food – Dining Out
+contains,JOE S KWIK MARTS,JOE'S KWIK MARTS,Auto + Transport – Fuel
+contains,EXXON JOE S KWIK MARTS,JOE'S KWIK MARTS,Auto + Transport – Fuel
+contains,LABCORP,LABCORP,Health – Medical / Dental
+contains,H MART,H MART,Food – Groceries
+contains,HELP MAX COM MAX COM,MAX,Entertainment – Streaming
+contains,DR NORMAN C CLARK,DR. NORMAN C. CLARK,Health – Medical / Dental
+contains,TREK MANAYUNK,TREK MANAYUNK,Auto + Transport – Maintenance
+contains,TARGET,TARGET,Shopping – Household
+contains,CONSUMER ONLINE INTERNATIONAL WIRE,INTERNATIONAL FAMILY SUPPORT,Giving – Family Support
+contains,T2 T2 UPPER DARBY,T2,Auto + Transport – Public Transit
+contains,SQ LE THAI,LE THAI,Food – Dining Out
+contains,NACHO DADDY,NACHO DADDY,Food – Dining Out
+contains,ECI COMFORT,ECI COMFORT,Housing – Repairs
+contains,GIRLS AUTO CLINIC,GIRLS AUTO CLINIC,Auto + Transport – Maintenance
+contains,AMERICAN AIR,AMERICAN AIRLINES,Travel – Flights
+contains,SPREAD BAGELRY,SPREAD BAGELRY,Food – Coffee / Cafes
+contains,BKST U PENN,U PENN BOOKSTORE,Entertainment – Books / Media
+contains,AUTOMATIC PAYMENT THANK,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,CHASE CREDIT CRD AUTOPAY,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,WAWA,WAWA,Auto + Transport – Fuel
+contains,SMARTMICROOPTICS,SMARTMICROOPTICS,Shopping – Technology / Electronics
+contains,QUICKEN INC,QUICKEN,Shopping – Software / Digital Services
+contains,APPLE STORE,APPLE STORE,Shopping – Technology / Electronics
+contains,RUDI S FORMAL,RUDI'S FORMAL WEAR,Shopping – Clothing
+contains,PATH TAPP PAYGO,PATH,Auto + Transport – Public Transit
+contains,DREXEL,DREXEL UNIVERSITY,Giving – Family Support
+contains,EKTA INDIAN CUISINE,EKTA INDIAN CUISINE,Food – Dining Out
+contains,ANTHROPOLOGIE,ANTHROPOLOGIE,Shopping – Gifts
+contains,DUNKIN,DUNKIN,Food – Coffee / Cafes
+contains,IRS TREAS 310 TAX REF,IRS TAX REFUND,Financial – Tax Payments
+contains,PAMELA ZIVARI,PAMELA ZIVARI,Travel – Lodging
+contains,BORO HOME OF BUILDING INS,BORO HOME OF BUILDING INS,Housing – Repairs
+contains,LINKEDIN,LINKEDIN,Shopping – Software / Digital Services
+contains,INDAY,INDAY,Food – Dining Out
+contains,MYRTLE BURGER,MYRTLE BURGER,Food – Dining Out
+contains,FIORELLA,FIORELLA,Food – Dining Out
+contains,LATAO,LATAO,Food – Dining Out
+contains,PHOLOSOPHY,PHOLOSOPHY,Food – Dining Out
+contains,WOORI KORE,WOORI KORE,Food – Dining Out
+contains,HAN DYNASTY,HAN DYNASTY,Food – Dining Out
+contains,RAJAJI CURRY HOUSE,RAJAJI CURRY HOUSE,Food – Dining Out
+contains,AMMA S SOUTH IND,AMMA'S SOUTH IND,Food – Dining Out
+contains,LAPIS,LAPIS,Food – Dining Out
+contains,THE LINE D C FOOD,THE LINE D.C. FOOD,Food – Dining Out
+contains,CHICK FIL A,CHICK-FIL-A,Food – Dining Out
+contains,PANDA EXPRESS,PANDA EXPRESS,Food – Dining Out
+contains,COOK OUT,COOK OUT,Food – Dining Out
+contains,HACHI KO,HACHI-KO,Food – Dining Out
+contains,SAINO,SAINO,Food – Dining Out
+contains,TOAST MI,TOAST MI,Food – Dining Out
+contains,KOREAN TOFU HOUSE,KOREAN TOFU HOUSE,Food – Dining Out
+contains,EL CUBO DE CUBA,EL CUBO DE CUBA,Food – Dining Out
+contains,BURRITO BAR,BURRITO BAR,Food – Dining Out
+contains,MASTER KONG,MASTER KONG,Food – Dining Out
+contains,JFK MELT SHOP,JFK MELT SHOP,Food – Dining Out
+contains,GUASACA,GUASACA,Food – Dining Out
+contains,TACOTACOMEXICANO,TACOTACOMEXICANO,Food – Dining Out
+contains,NISHAAN,NISHAAN,Food – Dining Out
+contains,GREYWIND,GREYWIND,Food – Dining Out
+contains,NOM WAH,NOM WAH,Food – Dining Out
+contains,ROSYS MEXICAN PUB,ROSY'S MEXICAN PUB,Food – Dining Out
+contains,TEJADA,TEJADA,Food – Dining Out
+contains,WELCOME 2 BAO BAO CAF,WELCOME 2 BAO BAO CAFE,Food – Dining Out
+contains,CARMELLAS,CARMELLA'S,Food – Dining Out
+contains,PARIS BAGUETTE,PARIS BAGUETTE,Food – Coffee / Cafes
+contains,MOKA CO,MOKA & CO,Food – Coffee / Cafes
+contains,MAKI AMP GONGCHA,MAKI & GONGCHA,Food – Coffee / Cafes
+contains,COCO FRESH TEA,COCO FRESH TEA,Food – Coffee / Cafes
+contains,COMEBUYTEA,COMEBUYTEA,Food – Coffee / Cafes
+contains,BEECHER S HANDMADE C,BEECHER'S HANDMADE CHEESE,Food – Coffee / Cafes
+contains,CAFFE VITA KEXP,CAFFE VITA,Food – Coffee / Cafes
+contains,MIRO TEA,MIRO TEA,Food – Coffee / Cafes
+contains,A LA MOUSSE,A LA MOUSSE,Food – Coffee / Cafes
+contains,PRET A MANGER,PRET A MANGER,Food – Coffee / Cafes
+contains,BEAN AMP BEAN,BEAN & BEAN,Food – Coffee / Cafes
+contains,APPLETON MARKET,APPLETON MARKET,Food – Groceries
+contains,SAFEWAY,SAFEWAY,Food – Groceries
+contains,PHOENIX COMICS,PHOENIX COMICS,Entertainment – Books / Media
+contains,STRAND BOOK STORE,STRAND BOOK STORE,Entertainment – Books / Media
+contains,AIRBNB,AIRBNB,Travel – Lodging
+contains,TRIMET,TRIMET,Auto + Transport – Public Transit
+contains,THE HOME DEPOT,HOME DEPOT,Housing – Repairs
+contains,GREAT CLIPS,GREAT CLIPS,Shopping – Personal
+contains,REI,REI,Shopping – Other
+contains,UPSIDE247,UPSIDE247,Shopping – Other
+contains,SHELL OIL,SHELL OIL,Auto + Transport – Fuel
+contains,SUNFLOWER,SUNFLOWER,Food – Dining Out
+contains,BP 2199700MANSON BP,BP,Auto + Transport – Fuel
+contains,ROYAL FARMS,ROYAL FARMS,Auto + Transport – Fuel
+contains,EL RANCHERO,EL RANCHERO,Food – Dining Out
+contains,U TOWN,U-TOWN,Food – Dining Out
+contains,ONEQUINCE,QUINCE,Shopping – Clothing
+contains,NORDSTROM RACK,NORDSTROM RACK,Shopping – Clothing
+contains,BARNES AMP NOBLE,BARNES & NOBLE,Entertainment – Books / Media
+contains,GAP OUTLET,GAP OUTLET,Shopping – Clothing
+contains,EVERLANE,EVERLANE,Shopping – Clothing
+contains,SMARTRIP,SMARTRIP,Auto + Transport – Public Transit
+contains,THOMAS JEFFERSON UNIV,THOMAS JEFFERSON UNIVERSITY,Health – Medical / Dental
+contains,HABANA CON B,HABANA CON B,Food – Dining Out
+contains,KATI SHOP,KATI SHOP,Food – Dining Out
+contains,SEVEN GRAMS CAFFE,SEVEN GRAMS CAFFE,Food – Coffee / Cafes
+contains,LEMON GRASS THAI,LEMON GRASS THAI,Food – Dining Out
+contains,WINE AND SPIRITS,WINE AND SPIRITS,Food – Other
+contains,GONG CHA,GONG CHA,Food – Coffee / Cafes
+contains,ALLEGNT AIR,ALLEGIANT AIR,Travel – Flights
+contains,SARDIS POLLO,SARDIS POLLO,Food – Dining Out
+contains,BLUEHOST,BLUEHOST,Shopping – Software / Digital Services
+contains,HUDSON ST2441,HUDSON,Shopping – Other
+contains,TONY RONIS,TONY RONI'S,Food – Dining Out
+contains,WHITE DUCK TACO,WHITE DUCK TACO SHOP,Food – Dining Out
+contains,BLACK BEAR COFFE,BLACK BEAR COFFEE,Food – Coffee / Cafes
+contains,NJT PAYGO,NJ TRANSIT,Auto + Transport – Public Transit
+contains,TROPICAL SMOOTHIE,TROPICAL SMOOTHIE,Food – Coffee / Cafes
+contains,FLIX,FLIX,Auto + Transport – Public Transit
+contains,WHOOP,WHOOP,Health – Other
+contains,ALOHA ALLEY,ALOHA ALLEY,Food – Dining Out
+contains,SHOPRITE,SHOPRITE,Food – Groceries
+contains,OLD NELSON FOOD,OLD NELSON FOOD CO,Food – Groceries
+contains,SPOT OF TEA,SPOT OF TEA,Food – Coffee / Cafes
+contains,ZOLA COM REGISTRY,ZOLA REGISTRY,Shopping – Household
+contains,YELLOW GEORGETOWN,YELLOW,Food – Dining Out
+contains,RAZ INDIGO,INDIGO,Travel – Flights
+contains,EXXON 63RD STREET,EXXON,Auto + Transport – Fuel
+contains,FALAFEL INC,FALAFEL INC,Food – Dining Out
+contains,HARAZ,HARAZ,Food – Coffee / Cafes
+contains,43RD AMP BALTIMORE AVE,43RD & BALTIMORE AVE,Food – Coffee / Cafes
+contains,UNION STATION BULLFRO,UNION STATION BULLFROG BAGELS,Food – Coffee / Cafes
+contains,VIRASAT INDIAN CUISIN,VIRASAT INDIAN CUISINE,Food – Dining Out
+contains,TRAVELERS PER INSUR,TRAVELERS,Housing – Homeowners/Renters Insurance
+contains,PHILADELPHIA RUNNER,PHILADELPHIA RUNNER,Shopping – Personal
+contains,TJMAXX,TJMAXX,Shopping – Household
+contains,JFK SHAKESHACK,SHAKE SHACK,Food – Dining Out
+contains,INTERGLOBE AVIATION,INDIGO,Travel – Flights
+contains,SPRIG GRANVILLE ISLANDS,SPRIG GRANVILLE ISLANDS,Food – Dining Out
+contains,ATLAS FREMONT MALL,ATLAS FREMONT MALL,Food – Dining Out
+contains,MINISTRYOFEXTERNALAFFAIRS,MINISTRY OF EXTERNAL AFFAIRS,Financial – Legal Fees
+contains,CONVERA USA LLC,CONVERA USA LLC,Giving – Family Support
+contains,VCD PAYMINTSIO,VCD PAYMINTSIO,Financial – Other
+contains,SPIRE ABSTRACT LLC,SPIRE ABSTRACT LLC,Housing – Other
+contains,RS HOME IN,RS HOME INSPECTION,Housing – Other

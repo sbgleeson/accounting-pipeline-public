@@ -1,0 +1,4 @@
+account_id,account_name,account_type,default_bucket,schema,file_match
+1001,Primary Checking,checking,Personal,bank,1001
+1002,Household Savings,savings,Household,bank,1002
+2001,Primary Credit Card,credit_card,Credit,card,2001|CardNickname
