@@ -219,16 +219,24 @@ CATEGORIES_BUDGET_COLUMN_WIDTHS = {
 }
 
 NEEDS_REVIEW_COLUMN_WIDTHS = {
-    "review_reason": 28,
+    "review_reason": 24,
+    "action": 20,
     "post_date": 13,
     "amount": 12,
-    "account_name": 24,
-    "description": 38,
-    "category": 32,
+    "account_name": 20,
+    "description": 34,
+    "category": 28,
     "category_source": 22,
     "owner_bucket": 14,
     "venmo_status": 14,
-    "review_note": 42,
+    "review_note": 62,
+}
+
+HIDDEN_NEEDS_REVIEW_COLUMNS = {
+    "category",
+    "category_source",
+    "owner_bucket",
+    "venmo_status",
 }
 
 SUMMARY_TABLE_START_ROW = 7
@@ -248,10 +256,27 @@ def populate_overview_sheet(
         "Totals reflect only the accounts and files loaded into this profile."
     )
 
-    card_columns = (("A", "C"), ("D", "F"), ("G", "I"))
-    for index, (label, value, note) in enumerate(metrics):
-        card_row = 5 + (index // 3) * 4
-        start_column, end_column = card_columns[index % 3]
+    if metrics:
+        label, value, note = metrics[0]
+        worksheet.merge_cells("A5:I5")
+        worksheet.merge_cells("A6:I6")
+        worksheet.merge_cells("A7:I7")
+        worksheet["A5"] = label
+        worksheet["A6"] = decimal_to_number(value) if isinstance(value, Decimal) else value
+        worksheet["A7"] = note
+        if isinstance(value, Decimal):
+            worksheet["A6"].number_format = "$#,##0.00"
+
+    card_positions = (
+        (9, "A", "C"),
+        (9, "D", "F"),
+        (9, "G", "I"),
+        (13, "A", "C"),
+        (13, "D", "F"),
+        (13, "G", "I"),
+    )
+    for index, (label, value, note) in enumerate(metrics[1:]):
+        card_row, start_column, end_column = card_positions[index]
         worksheet.merge_cells(f"{start_column}{card_row}:{end_column}{card_row}")
         worksheet.merge_cells(f"{start_column}{card_row + 1}:{end_column}{card_row + 1}")
         worksheet.merge_cells(f"{start_column}{card_row + 2}:{end_column}{card_row + 2}")
@@ -261,42 +286,41 @@ def populate_overview_sheet(
         if isinstance(value, Decimal):
             worksheet[f"{start_column}{card_row + 1}"].number_format = "$#,##0.00"
 
-    guide_start_row = 18
-    worksheet.merge_cells(start_row=guide_start_row, start_column=1, end_row=guide_start_row, end_column=9)
-    worksheet.cell(guide_start_row, 1).value = "Workbook guide"
-    worksheet.cell(guide_start_row + 1, 1).value = "Sheet"
-    worksheet.cell(guide_start_row + 1, 3).value = "What it answers"
-    guide_rows = [
-        ("Needs Review", "What requires a person to classify, confirm, or investigate?"),
-        ("Categories & Budget", "What categories and editable monthly targets drive the summaries?"),
-        ("Spending Summary", "Where did money go after excluding transfers and card payments?"),
-        ("Income Summary", "What income is visible in the loaded accounts, by source?"),
-        ("Cash Flow Summary", "What moved into and out of cash accounts?"),
-        ("transactions", "What normalized activity was loaded, and how was each row categorized?"),
-        ("venmo_activity", "Which raw Venmo export rows linked to loaded bank transactions?"),
-        ("reconciliation", "Which statement periods reconcile to loaded transaction activity?"),
+    flow_start_row = 18
+    worksheet.merge_cells(start_row=flow_start_row, start_column=1, end_row=flow_start_row, end_column=9)
+    worksheet.cell(flow_start_row, 1).value = "Suggested review flow"
+    worksheet.cell(flow_start_row + 1, 1).value = "Step"
+    worksheet.cell(flow_start_row + 1, 2).value = "Where to go"
+    worksheet.cell(flow_start_row + 1, 5).value = "What to check"
+    flow_rows = [
+        ("1", "Needs Review", "Resolve items that need a human decision."),
+        ("2", "Categories & Budget", "Review editable targets and notes."),
+        ("3", "Spending / Income / Cash Flow", "Compare actuals, targets, and cash movement."),
+        ("4", "transactions / venmo_activity / reconciliation", "Audit source detail when needed."),
     ]
     if income_routing_enabled:
-        guide_rows.append(
+        flow_rows.append(
             (
+                "5",
                 "Income Routing Review",
-                "Where is income observed, and what internal transfers into the family destination are visible?",
+                "Check observed income and visible transfers without assuming one paycheck maps to one transfer.",
             )
         )
-    for row_number, (sheet_name, purpose) in enumerate(guide_rows, start=guide_start_row + 2):
-        worksheet.merge_cells(start_row=row_number, start_column=1, end_row=row_number, end_column=2)
-        worksheet.merge_cells(start_row=row_number, start_column=3, end_row=row_number, end_column=9)
-        worksheet.cell(row_number, 1).value = sheet_name
-        worksheet.cell(row_number, 3).value = purpose
+    for row_number, (step, sheet_name, purpose) in enumerate(flow_rows, start=flow_start_row + 2):
+        worksheet.merge_cells(start_row=row_number, start_column=2, end_row=row_number, end_column=4)
+        worksheet.merge_cells(start_row=row_number, start_column=5, end_row=row_number, end_column=9)
+        worksheet.cell(row_number, 1).value = step
+        worksheet.cell(row_number, 2).value = sheet_name
+        worksheet.cell(row_number, 5).value = purpose
 
 
 def populate_needs_review_sheet(worksheet, review_rows: list[list[object]]) -> None:
     """Create one compact exception list for human review."""
-    worksheet.merge_cells("A1:J1")
+    worksheet.merge_cells("A1:K1")
     worksheet["A1"] = "Needs Review"
-    worksheet.merge_cells("A2:J2")
+    worksheet.merge_cells("A2:K2")
     worksheet["A2"] = (
-        "Items remain visible until their category, owner bucket, Venmo match, or statement coverage is resolved."
+        "Items remain visible until their category, owner bucket, payment-app match, or statement coverage is resolved."
     )
     worksheet.append([])
     worksheet.append(NEEDS_REVIEW_HEADERS)
@@ -514,12 +538,13 @@ def write_excel_output(
     configured_accounts = accounts if accounts is not None else load_accounts()
     owner_buckets = get_owner_buckets(configured_accounts)
     review_rows = build_needs_review_rows(sorted_rows, configured_accounts, statement_metadata)
+    overview_metrics = build_overview_metrics(sorted_rows, configured_accounts, len(review_rows))
 
     overview_ws = workbook.active
     overview_ws.title = "Overview"
     populate_overview_sheet(
         overview_ws,
-        build_overview_metrics(sorted_rows, configured_accounts, len(review_rows)),
+        overview_metrics,
         profile_settings.enable_income_routing_review,
     )
 
@@ -877,8 +902,8 @@ def write_excel_output(
         for cell in row:
             cell.number_format = "$#,##0.00"
     for row_number in range(5, needs_review_ws.max_row + 1):
-        needs_review_ws[f"B{row_number}"].number_format = "mm/dd/yyyy"
-        needs_review_ws[f"C{row_number}"].number_format = "$#,##0.00"
+        needs_review_ws[f"C{row_number}"].number_format = "mm/dd/yyyy"
+        needs_review_ws[f"D{row_number}"].number_format = "$#,##0.00"
     if income_routing_ws is not None:
         for row_number in range(5, income_routing_summary_start_row):
             income_routing_ws[f"B{row_number}"].number_format = "mm/dd/yyyy"
@@ -944,11 +969,18 @@ def write_excel_output(
     neutral_fill = PatternFill(fill_type="solid", fgColor="E7E6E6")
     summary_fill = PatternFill(fill_type="solid", fgColor="D9EAF7")
     attention_fill = PatternFill(fill_type="solid", fgColor="FFF2CC")
+    overview_hero_fill = PatternFill(fill_type="solid", fgColor="1F4E78")
+    overview_scope_fill = PatternFill(fill_type="solid", fgColor="DDEBF7")
+    overview_review_fill = PatternFill(fill_type="solid", fgColor="FCE4D6")
+    overview_flow_fill = PatternFill(fill_type="solid", fgColor="F7F9FB")
     bold_font = Font(bold=True, color="FFFFFF")
     dark_bold_font = Font(bold=True)
     title_font = Font(bold=True, color="FFFFFF", size=24)
     subtitle_font = Font(color="44546A", italic=True, size=13)
     metric_value_font = Font(bold=True, color="1F1F1F", size=18)
+    overview_hero_label_font = Font(bold=True, color="FFFFFF", size=12)
+    overview_hero_value_font = Font(bold=True, color="FFFFFF", size=18)
+    overview_hero_note_font = Font(color="D9EAF7", italic=True, size=11)
     thin_gray_border = Border(
         left=Side(style="thin", color="D9E2F3"),
         right=Side(style="thin", color="D9E2F3"),
@@ -977,18 +1009,44 @@ def write_excel_output(
             cell.font = bold_font
 
     overview_ws["A1"].fill = sheet_header_fill
-    overview_ws["A1"].font = title_font
+    overview_ws["A1"].font = Font(bold=True, color="FFFFFF", size=20)
     overview_ws["A1"].alignment = Alignment(horizontal="left", vertical="center")
     overview_ws["A3"].font = subtitle_font
     overview_ws["A3"].alignment = Alignment(wrap_text=True)
-    for index in range(9):
-        card_row = 5 + (index // 3) * 4
-        start_column = ("A", "D", "G")[index % 3]
-        end_column = ("C", "F", "I")[index % 3]
+    for row_number in range(5, 8):
+        for row in overview_ws[f"A{row_number}:I{row_number}"]:
+            for cell in row:
+                cell.fill = overview_hero_fill
+                cell.border = thin_gray_border
+    overview_ws["A5"].font = overview_hero_label_font
+    overview_ws["A6"].font = overview_hero_value_font
+    overview_ws["A7"].font = overview_hero_note_font
+    overview_ws["A5"].alignment = Alignment(horizontal="left", vertical="center")
+    overview_ws["A6"].alignment = Alignment(horizontal="left", vertical="center")
+    overview_ws["A7"].alignment = Alignment(horizontal="left", vertical="top", wrap_text=True)
+    overview_card_fills = (
+        overview_scope_fill,
+        overview_scope_fill,
+        overview_scope_fill,
+        overview_scope_fill,
+        overview_scope_fill,
+        overview_review_fill,
+    )
+    overview_card_positions = (
+        (9, "A", "C"),
+        (9, "D", "F"),
+        (9, "G", "I"),
+        (13, "A", "C"),
+        (13, "D", "F"),
+        (13, "G", "I"),
+    )
+    for index in range(len(overview_metrics[1:])):
+        card_row, start_column, end_column = overview_card_positions[index]
+        card_fill = overview_card_fills[index]
         for row_number in range(card_row, card_row + 3):
             for row in overview_ws[f"{start_column}{row_number}:{end_column}{row_number}"]:
                 for cell in row:
-                    cell.fill = summary_fill
+                    cell.fill = card_fill
                     cell.border = thin_gray_border
         overview_ws[f"{start_column}{card_row}"].font = Font(bold=True, size=12)
         overview_ws[f"{start_column}{card_row + 1}"].font = metric_value_font
@@ -1000,14 +1058,18 @@ def write_excel_output(
         overview_ws[f"{start_column}{card_row + 2}"].alignment = Alignment(wrap_text=True)
     overview_ws["A18"].fill = sheet_header_fill
     overview_ws["A18"].font = bold_font
-    for cell in (overview_ws["A19"], overview_ws["C19"]):
+    for cell in (overview_ws["A19"], overview_ws["B19"], overview_ws["E19"]):
         cell.fill = summary_fill
         cell.font = dark_bold_font
     for row_number in range(20, overview_ws.max_row + 1):
+        fill = overview_flow_fill if row_number % 2 == 0 else PatternFill(fill_type=None)
+        for cell in overview_ws[row_number]:
+            cell.fill = fill
         overview_ws[f"A{row_number}"].font = Font(bold=True, size=11)
-        overview_ws[f"C{row_number}"].font = Font(size=11)
-        overview_ws[f"C{row_number}"].alignment = Alignment(wrap_text=True)
-        overview_ws.row_dimensions[row_number].height = 21
+        overview_ws[f"B{row_number}"].font = Font(bold=True, size=11)
+        overview_ws[f"E{row_number}"].font = Font(size=11)
+        overview_ws[f"E{row_number}"].alignment = Alignment(wrap_text=True)
+        overview_ws.row_dimensions[row_number].height = 34
 
     for summary_ws in (monthly_summary_ws, income_summary_ws, cash_flow_summary_ws):
         summary_ws.sheet_view.showGridLines = False
@@ -1051,7 +1113,9 @@ def write_excel_output(
             fill = attention_fill
         for cell in needs_review_ws[row_number]:
             cell.fill = fill
-        needs_review_ws[f"J{row_number}"].alignment = Alignment(wrap_text=True)
+        for column_letter in ("A", "B", "E", "F", "G"):
+            needs_review_ws[f"{column_letter}{row_number}"].alignment = Alignment(wrap_text=True)
+        needs_review_ws[f"K{row_number}"].alignment = Alignment(wrap_text=True)
 
     if income_routing_ws is not None:
         income_routing_ws["A1"].fill = sheet_header_fill
@@ -1212,7 +1276,7 @@ def write_excel_output(
     categories_budget_ws.auto_filter.ref = (
         f"A1:{get_column_letter(categories_budget_ws.max_column)}{categories_budget_ws.max_row}"
     )
-    needs_review_ws.auto_filter.ref = f"A4:J{needs_review_ws.max_row}"
+    needs_review_ws.auto_filter.ref = f"A4:K{needs_review_ws.max_row}"
     if income_routing_ws is not None and income_routing_summary_start_row > 5:
         income_routing_ws.auto_filter.ref = (
             f"A4:N{income_routing_summary_start_row - 1}"
@@ -1233,10 +1297,18 @@ def write_excel_output(
             width = max((len(value) for value in values), default=10)
             worksheet.column_dimensions[column_cells[0].column_letter].width = min(width + 2, 40)
     for column_letter in "ABCDEFGHI":
-        overview_ws.column_dimensions[column_letter].width = 11
-    overview_ws.row_dimensions[1].height = 32
-    overview_ws.row_dimensions[2].height = 32
+        overview_ws.column_dimensions[column_letter].width = 12
+    overview_ws.column_dimensions["A"].width = 7
+    overview_ws.row_dimensions[1].height = 26
+    overview_ws.row_dimensions[2].height = 26
     overview_ws.row_dimensions[3].height = 38
+    overview_ws.row_dimensions[5].height = 20
+    overview_ws.row_dimensions[6].height = 26
+    overview_ws.row_dimensions[7].height = 24
+    for row_number in (9, 13):
+        overview_ws.row_dimensions[row_number].height = 20
+        overview_ws.row_dimensions[row_number + 1].height = 26
+        overview_ws.row_dimensions[row_number + 2].height = 34
     overview_ws.sheet_view.showGridLines = False
     overview_ws.sheet_view.zoomScale = 100
     overview_ws.sheet_properties.pageSetUpPr.fitToPage = True
@@ -1251,6 +1323,10 @@ def write_excel_output(
         needs_review_ws.column_dimensions[
             get_column_letter(NEEDS_REVIEW_HEADERS.index(column_name) + 1)
         ].width = width
+    for column_name in HIDDEN_NEEDS_REVIEW_COLUMNS:
+        needs_review_ws.column_dimensions[
+            get_column_letter(NEEDS_REVIEW_HEADERS.index(column_name) + 1)
+        ].hidden = True
 
     for column_name, width in TRANSACTION_COLUMN_WIDTHS.items():
         transactions_ws.column_dimensions[get_column_letter(OUTPUT_COLUMNS.index(column_name) + 1)].width = width

@@ -49,9 +49,11 @@ class WorkbookFrontMatterTests(unittest.TestCase):
         review_rows = build_needs_review_rows(rows, accounts, {})
 
         self.assertEqual(len(review_rows), 2)
-        self.assertIn("Uncategorized transaction", review_rows[0][0])
-        self.assertIn("Unmatched Venmo activity", review_rows[0][0])
+        self.assertEqual(review_rows[0][0], "Unmatched Venmo activity")
+        self.assertEqual(review_rows[0][1], "Check payment-app match")
+        self.assertEqual(review_rows[0][6], "Uncategorized – Needs Review")
         self.assertEqual(review_rows[1][0], "Statement metadata unavailable")
+        self.assertEqual(review_rows[1][1], "Add statement PDF")
 
     def test_overview_metrics_keep_income_spending_and_transfers_distinct(self) -> None:
         rows = [
@@ -74,6 +76,21 @@ class WorkbookFrontMatterTests(unittest.TestCase):
         self.assertEqual(metrics["Observed income"], Decimal("1000.00"))
         self.assertEqual(metrics["Net spending"], Decimal("100.00"))
         self.assertEqual(metrics["Net external cash flow"], Decimal("900.00"))
+
+    def test_overview_metrics_roll_unmatched_venmo_into_needs_review_only(self) -> None:
+        rows = [
+            build_row(
+                category="Food – Dining Out",
+                venmo_match_status="unmatched",
+            )
+        ]
+        accounts = [Account("1001", "Demo Checking", "checking", "Personal", "bank", "1001")]
+
+        metric_labels = [label for label, _value, _note in build_overview_metrics(rows, accounts, 1)]
+
+        self.assertIn("Needs review", metric_labels)
+        self.assertNotIn("Unmatched Venmo", metric_labels)
+        self.assertNotIn("Savings + investing", metric_labels)
 
 
 if __name__ == "__main__":
