@@ -8,7 +8,12 @@ from openpyxl import Workbook
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from accounting_pipeline.output.workbook_writer import get_group_main_rows, populate_overview_sheet
+from accounting_pipeline.output.workbook_writer import (
+    get_group_main_rows,
+    populate_categories_budget_reality_formulas,
+    populate_categories_budget_sheet,
+    populate_overview_sheet,
+)
 
 
 class WorkbookWriterTests(unittest.TestCase):
@@ -62,6 +67,60 @@ class WorkbookWriterTests(unittest.TestCase):
         self.assertEqual(worksheet["B20"].value, "Needs Review")
         self.assertIn("B20:D20", merged_ranges)
         self.assertIn("E20:I20", merged_ranges)
+
+    def test_categories_budget_uses_summary_average_as_reality_without_review_status(self) -> None:
+        workbook = Workbook()
+        worksheet = workbook.active
+        category_rows = [
+            {
+                "main_category": "Food",
+                "sub_category": "Groceries",
+                "combined": "Food – Groceries",
+            }
+        ]
+        populate_categories_budget_sheet(
+            worksheet,
+            category_rows,
+            budget_targets=[
+                {
+                    "budget_label": "Food",
+                    "monthly_target": '=ROUND(SUMIF($A:$A,"Income – Paycheck",$G:$G)*0.10,0)',
+                    "target_type": "max",
+                    "owner_bucket": "Personal",
+                    "review_status": "draft",
+                    "notes": "Demo food target",
+                }
+            ],
+        )
+        populate_categories_budget_reality_formulas(worksheet, "J")
+
+        headers = [worksheet.cell(1, column_number).value for column_number in range(1, worksheet.max_column + 1)]
+        self.assertEqual(
+            headers,
+            [
+                "Category / budget label",
+                "Budget level",
+                "Main category",
+                "Subcategory",
+                "Combined category",
+                "Reality",
+                "Monthly target",
+                "Target type",
+                "Owner bucket",
+                "Notes",
+            ],
+        )
+        self.assertNotIn("Review status", headers)
+        self.assertEqual(
+            worksheet["F2"].value,
+            '=IFERROR(INDEX(\'Income Summary\'!$J:$J,MATCH($A2,\'Income Summary\'!$A:$A,0)),'
+            'IFERROR(INDEX(\'Spending Summary\'!$J:$J,MATCH($A2,\'Spending Summary\'!$A:$A,0)),""))',
+        )
+        self.assertEqual(worksheet["J2"].value, "Demo food target")
+        self.assertEqual(
+            worksheet["G2"].value,
+            '=ROUND(SUMIF($A:$A,"Income – Paycheck",$G:$G)*0.10,0)',
+        )
 
 
 if __name__ == "__main__":

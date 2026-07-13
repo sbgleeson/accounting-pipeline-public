@@ -1,12 +1,12 @@
-budget_label,reality_monthly,monthly_target,target_type,owner_bucket,review_status,notes
-Income – Paycheck,,3800,min,Personal,draft,Synthetic demo income target
-Housing,,1650,max,Personal,draft,Synthetic monthly housing plan
-Food,,700,max,Personal,draft,Groceries dining and takeout combined
-Food – Groceries,,450,max,Personal,draft,Synthetic grocery target
-Food – Dining Out,,175,max,Personal,draft,Synthetic dining target
-Food – Takeout / Delivery,,75,max,Personal,draft,Synthetic takeout target
-Auto + Transport,,200,max,Personal,draft,Synthetic transportation target
-Entertainment,,100,max,Personal,draft,Synthetic entertainment target
-Giving,,75,min,Personal,draft,Synthetic giving goal
-Savings,,500,min,Household,draft,Synthetic emergency savings goal
-Investing,,250,min,Personal,draft,Synthetic investing goal
+budget_label,reality_monthly,monthly_target,target_type,owner_bucket,notes
+Income – Paycheck,,3800,min,Personal,Synthetic demo income target
+Housing,,1650,max,Personal,Synthetic monthly housing plan
+Food,,700,max,Personal,Groceries dining and takeout combined
+Food – Groceries,,450,max,Personal,Synthetic grocery target
+Food – Dining Out,,175,max,Personal,Synthetic dining target
+Food – Takeout / Delivery,,75,max,Personal,Synthetic takeout target
+Auto + Transport,,200,max,Personal,Synthetic transportation target
+Entertainment,,100,max,Personal,Synthetic entertainment target
+Giving,,75,min,Personal,Synthetic giving goal
+Savings,,"=ROUND(SUMIF($A:$A,""Income – Paycheck"",$G:$G)*0.10,0)",min,Household,Emergency fund target is 10% of expected income until funded; set to 0 once funded
+Investing,,"=ROUND(SUMIF($A:$A,""Income – Paycheck"",$G:$G)*0.10,0)",min,Personal,Target is 10% of expected income; adjust percentage as desired
