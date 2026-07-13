@@ -13,7 +13,7 @@
 
 ## Current Implementation
 
-- [x] Chase bank and credit-card CSV ingestion.
+- [x] Bank and credit-card CSV ingestion.
 - [x] Venmo CSV ingestion.
 - [x] Statement PDF metadata extraction when `pdfplumber` is available.
 - [x] Duplicate transaction removal.

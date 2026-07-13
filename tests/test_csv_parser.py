@@ -14,7 +14,7 @@ from accounting_pipeline.parsers.csv_parser import classify_csv_file
 class CsvParserTests(unittest.TestCase):
     def test_classifies_bank_export_from_filename_and_schema(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            path = Path(tmp_dir) / "Chase5005_Activity_20260414.CSV"
+            path = Path(tmp_dir) / "Bank5005_Activity_20260414.CSV"
             path.write_text(
                 "Details,Posting Date,Description,Amount,Type,Balance,Check or Slip #\n",
                 encoding="utf-8",
@@ -39,7 +39,7 @@ class CsvParserTests(unittest.TestCase):
 
     def test_classifies_ambiguous_card_export_to_only_known_card_account(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            path = Path(tmp_dir) / "Chasenull_Activity20260201_20260228_20260414.CSV"
+            path = Path(tmp_dir) / "CardExport_Activity20260201_20260228_20260414.CSV"
             path.write_text(
                 "Transaction Date,Post Date,Description,Category,Type,Amount,Memo\n",
                 encoding="utf-8",
@@ -72,7 +72,7 @@ class CsvParserTests(unittest.TestCase):
 
     def test_requires_file_match_when_multiple_accounts_are_configured(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
-            path = Path(tmp_dir) / "Chase_Activity.CSV"
+            path = Path(tmp_dir) / "Bank_Activity.CSV"
             path.write_text(
                 "Details,Posting Date,Description,Amount,Type,Balance,Check or Slip #\n",
                 encoding="utf-8",

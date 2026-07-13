@@ -112,14 +112,14 @@ VENMO_ACTIVITY_HEADERS = [
     "funding_source",
     "destination",
     "source_file",
-    "chase_link_status",
-    "chase_match_type",
-    "chase_post_date",
-    "chase_amount",
-    "chase_description",
-    "chase_category",
-    "chase_owner_bucket",
-    "chase_source_file",
+    "bank_link_status",
+    "bank_match_type",
+    "bank_post_date",
+    "bank_amount",
+    "bank_description",
+    "bank_category",
+    "bank_owner_bucket",
+    "bank_source_file",
 ]
 
 VENMO_ACTIVITY_COLUMN_WIDTHS = {
@@ -135,14 +135,14 @@ VENMO_ACTIVITY_COLUMN_WIDTHS = {
     "funding_source": 18,
     "destination": 24,
     "source_file": 26,
-    "chase_link_status": 18,
-    "chase_match_type": 16,
-    "chase_post_date": 13,
-    "chase_amount": 12,
-    "chase_description": 40,
-    "chase_category": 26,
-    "chase_owner_bucket": 14,
-    "chase_source_file": 26,
+    "bank_link_status": 18,
+    "bank_match_type": 16,
+    "bank_post_date": 13,
+    "bank_amount": 12,
+    "bank_description": 40,
+    "bank_category": 26,
+    "bank_owner_bucket": 14,
+    "bank_source_file": 26,
 }
 
 RECONCILIATION_COLUMN_WIDTHS = {
@@ -273,7 +273,7 @@ def populate_overview_sheet(
         ("Income Summary", "What income is visible in the loaded accounts, by source?"),
         ("Cash Flow Summary", "What moved into and out of cash accounts?"),
         ("transactions", "What normalized activity was loaded, and how was each row categorized?"),
-        ("venmo_activity", "Which raw Venmo export rows linked to loaded Chase transactions?"),
+        ("venmo_activity", "Which raw Venmo export rows linked to loaded bank transactions?"),
         ("reconciliation", "Which statement periods reconcile to loaded transaction activity?"),
     ]
     if income_routing_enabled:
@@ -444,7 +444,7 @@ def populate_categories_budget_sheet(
 
 
 def build_venmo_activity_links(rows: list[Transaction]) -> dict[str, Transaction]:
-    """Return the Chase row linked to each Venmo activity ID."""
+    """Return the bank row linked to each Venmo activity ID."""
     links: dict[str, Transaction] = {}
     for row in rows:
         if not row.venmo_id:
@@ -461,7 +461,7 @@ def populate_venmo_activity_sheet(
     activities: list[VenmoActivity],
     rows: list[Transaction],
 ) -> None:
-    """Write raw Venmo export activity with any linked Chase transaction details."""
+    """Write raw Venmo export activity with any linked bank transaction details."""
     worksheet.append(VENMO_ACTIVITY_HEADERS)
     links_by_venmo_id = build_venmo_activity_links(rows)
 
@@ -1326,7 +1326,7 @@ def write_excel_output(
     for row in venmo_activity_ws.iter_rows(min_row=2, max_row=venmo_activity_ws.max_row, min_col=1, max_col=2):
         for cell in row:
             cell.number_format = "mm/dd/yyyy"
-    for column_name in ("amount", "chase_amount"):
+    for column_name in ("amount", "bank_amount"):
         column_number = VENMO_ACTIVITY_HEADERS.index(column_name) + 1
         for row in venmo_activity_ws.iter_rows(
             min_row=2,
@@ -1336,12 +1336,12 @@ def write_excel_output(
         ):
             for cell in row:
                 cell.number_format = "$#,##0.00"
-    chase_post_date_column = VENMO_ACTIVITY_HEADERS.index("chase_post_date") + 1
+    bank_post_date_column = VENMO_ACTIVITY_HEADERS.index("bank_post_date") + 1
     for row in venmo_activity_ws.iter_rows(
         min_row=2,
         max_row=venmo_activity_ws.max_row,
-        min_col=chase_post_date_column,
-        max_col=chase_post_date_column,
+        min_col=bank_post_date_column,
+        max_col=bank_post_date_column,
     ):
         for cell in row:
             cell.number_format = "mm/dd/yyyy"

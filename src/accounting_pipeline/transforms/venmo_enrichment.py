@@ -16,45 +16,45 @@ def parse_venmo_datetime(value: str) -> datetime:
     return datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
 
 
-def extract_chase_venmo_name(description: str) -> str:
-    """Pull the visible Venmo counterparty name out of the Chase description."""
+def extract_bank_venmo_name(description: str) -> str:
+    """Pull the visible Venmo counterparty name out of the bank description."""
     match = re.search(r"VENMO\s+\*([A-Za-z '&.-]+?)\s+Visa Direct", description)
     if not match:
         return ""
     return normalize_description(match.group(1))
 
 
-def is_chase_venmo_payment(row: Transaction) -> bool:
-    """Return whether the Chase row looks like a Venmo card payment."""
+def is_bank_venmo_payment(row: Transaction) -> bool:
+    """Return whether the bank row looks like a Venmo card payment."""
     return "VENMO *" in row.description.upper() and row.amount < 0
 
 
-def is_chase_venmo_cashout(row: Transaction) -> bool:
-    """Return whether the Chase row looks like a Venmo cashout deposit."""
+def is_bank_venmo_cashout(row: Transaction) -> bool:
+    """Return whether the bank row looks like a Venmo cashout deposit."""
     description = row.description.upper()
     return "VENMO" in description and "CASHOUT" in description and row.amount > 0
 
 
-def names_match(chase_name: str, venmo_name: str) -> bool:
-    """Return whether a Chase-truncated Venmo name matches a Venmo counterparty."""
-    if not chase_name:
+def names_match(bank_name: str, venmo_name: str) -> bool:
+    """Return whether a bank-truncated Venmo name matches a Venmo counterparty."""
+    if not bank_name:
         return True
 
-    normalized_chase_name = normalize_description(chase_name)
+    normalized_bank_name = normalize_description(bank_name)
     normalized_venmo_name = normalize_description(venmo_name)
-    if normalized_chase_name in normalized_venmo_name:
+    if normalized_bank_name in normalized_venmo_name:
         return True
 
-    chase_tokens = normalized_chase_name.split()
+    bank_tokens = normalized_bank_name.split()
     venmo_tokens = normalized_venmo_name.split()
-    if len(chase_tokens) > len(venmo_tokens):
+    if len(bank_tokens) > len(venmo_tokens):
         return False
 
-    return all(venmo_token.startswith(chase_token) for chase_token, venmo_token in zip(chase_tokens, venmo_tokens))
+    return all(venmo_token.startswith(bank_token) for bank_token, venmo_token in zip(bank_tokens, venmo_tokens))
 
 
 def apply_venmo_match(row: Transaction, activity: VenmoActivity, match_type: str, merchant_name: str) -> None:
-    """Copy matched Venmo details onto the Chase transaction row."""
+    """Copy matched Venmo details onto the bank transaction row."""
     row.venmo_match_status = "matched"
     row.venmo_match_type = match_type
     row.venmo_id = activity.venmo_id
@@ -81,7 +81,7 @@ def apply_venmo_transfer_support(row: Transaction, transfers: list[VenmoActivity
     row.venmo_match_type = "cashout"
     row.canonical_merchant = "VENMO CASHOUT"
     row.venmo_note = (
-        "Cashout supported by Venmo Standard Transfer to Chase; "
+        "Cashout supported by Venmo Standard Transfer to the linked bank account; "
         "underlying Venmo balance source not assigned."
     )
     if not transfers:
@@ -95,8 +95,8 @@ def apply_venmo_transfer_support(row: Transaction, transfers: list[VenmoActivity
 
 
 def find_outgoing_payment_match(row: Transaction, outgoing_payments: list[VenmoActivity]) -> VenmoActivity | None:
-    """Match a Chase Venmo card debit to a single Venmo outgoing payment."""
-    chase_name = extract_chase_venmo_name(row.description)
+    """Match a card-linked payment debit to a single Venmo outgoing payment."""
+    bank_name = extract_bank_venmo_name(row.description)
     post_date = datetime.strptime(row.post_date, "%m/%d/%Y").date()
     matches: list[VenmoActivity] = []
 
@@ -106,7 +106,7 @@ def find_outgoing_payment_match(row: Transaction, outgoing_payments: list[VenmoA
             continue
         if abs(activity.amount) != abs(row.amount):
             continue
-        if not names_match(chase_name, get_outgoing_counterparty(activity)):
+        if not names_match(bank_name, get_outgoing_counterparty(activity)):
             continue
         matches.append(activity)
 
@@ -130,16 +130,16 @@ def deduplicate_activities(activities: list[VenmoActivity]) -> list[VenmoActivit
 def has_supporting_transfer(
     payment: VenmoActivity,
     standard_transfers: list[VenmoActivity],
-    chase_post_date,
-    chase_amount: Decimal,
+    bank_post_date,
+    bank_amount: Decimal,
 ) -> bool:
-    """Check whether a Venmo incoming payment has a nearby standard transfer to Chase."""
+    """Check whether a Venmo incoming payment has a nearby standard transfer to the linked bank account."""
     payment_date = parse_venmo_datetime(payment.datetime).date()
     for transfer in standard_transfers:
         transfer_date = parse_venmo_datetime(transfer.datetime).date()
-        if abs(transfer.amount) != chase_amount:
+        if abs(transfer.amount) != bank_amount:
             continue
-        if not (0 <= (chase_post_date - transfer_date).days <= 7):
+        if not (0 <= (bank_post_date - transfer_date).days <= 7):
             continue
         if not (0 <= (transfer_date - payment_date).days <= 7):
             continue
@@ -151,7 +151,7 @@ def find_cashout_transfer_support(
     row: Transaction,
     standard_transfers: list[VenmoActivity],
 ) -> list[VenmoActivity]:
-    """Return Venmo Standard Transfers that support a Chase cashout deposit."""
+    """Return Venmo Standard Transfers that support a bank cashout deposit."""
     post_date = datetime.strptime(row.post_date, "%m/%d/%Y").date()
     matches: list[VenmoActivity] = []
 
@@ -171,7 +171,7 @@ def find_cashout_match(
     incoming_payments: list[VenmoActivity],
     standard_transfers: list[VenmoActivity],
 ) -> VenmoActivity | None:
-    """Match a Chase Venmo cashout deposit to a single Venmo incoming payment."""
+    """Match a bank cashout deposit to a single Venmo incoming payment."""
     post_date = datetime.strptime(row.post_date, "%m/%d/%Y").date()
     matches: list[VenmoActivity] = []
 
@@ -191,7 +191,7 @@ def find_cashout_match(
 
 
 def enrich_with_venmo(rows: list[Transaction], activities: list[VenmoActivity]) -> None:
-    """Use Venmo activity to enrich matching Chase rows without adding duplicate spend rows."""
+    """Use Venmo activity to enrich matching bank rows without adding duplicate spend rows."""
     unique_activities = deduplicate_activities(activities)
     outgoing_payments = [
         activity
@@ -204,14 +204,14 @@ def enrich_with_venmo(rows: list[Transaction], activities: list[VenmoActivity]) 
     standard_transfers = [
         activity
         for activity in unique_activities
-        if activity.activity_type == "Standard Transfer" and "JPMORGAN CHASE" in activity.destination.upper()
+        if activity.activity_type == "Standard Transfer" and activity.destination.strip()
     ]
     matched_count = 0
     transfer_supported_count = 0
     unmatched_count = 0
 
     for row in rows:
-        if is_chase_venmo_payment(row):
+        if is_bank_venmo_payment(row):
             activity = find_outgoing_payment_match(row, outgoing_payments)
             if activity is not None:
                 apply_venmo_match(
@@ -227,7 +227,7 @@ def enrich_with_venmo(rows: list[Transaction], activities: list[VenmoActivity]) 
                 unmatched_count += 1
             continue
 
-        if is_chase_venmo_cashout(row):
+        if is_bank_venmo_cashout(row):
             activity = find_cashout_match(row, incoming_payments, standard_transfers)
             if activity is not None:
                 apply_venmo_match(
@@ -248,7 +248,7 @@ def enrich_with_venmo(rows: list[Transaction], activities: list[VenmoActivity]) 
                     unmatched_count += 1
 
     logger.info(
-        "Venmo enrichment matched %s Chase rows, transfer-supported %s cashouts, and left %s unmatched",
+        "Venmo enrichment matched %s bank rows, transfer-supported %s cashouts, and left %s unmatched",
         matched_count,
         transfer_supported_count,
         unmatched_count,

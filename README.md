@@ -1,6 +1,6 @@
 ## Accounting Pipeline
 
-Normalize Chase exports, enrich Venmo-linked Chase rows, extract statement metadata, and generate a review workbook.
+Normalize bank and card exports, enrich Venmo-linked bank rows, extract statement metadata, and generate a review workbook.
 
 ### Project Docs
 

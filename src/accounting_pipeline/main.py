@@ -39,7 +39,7 @@ def run_pipeline(paths: PipelinePaths | None = None) -> None:
     dedupe_result = load_rows_with_summary(active_paths)
     rows = dedupe_result.rows
     logger.info(
-        "Loaded %s raw Chase transaction rows, removed %s duplicates, kept %s normalized rows",
+        "Loaded %s raw bank transaction rows, removed %s duplicates, kept %s normalized rows",
         dedupe_result.raw_count,
         dedupe_result.duplicate_count,
         len(rows),
@@ -73,7 +73,7 @@ def run_pipeline(paths: PipelinePaths | None = None) -> None:
 
     logger.info("Matching internal transfers")
     match_internal_transfers(rows)
-    logger.info("Enriching Chase rows with Venmo activity")
+    logger.info("Enriching bank rows with Venmo activity")
     enrich_with_venmo(rows, venmo_activities)
     logger.info("Assigning categories")
     assign_categories(
