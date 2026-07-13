@@ -60,7 +60,7 @@
 
 ## 2026-06-17 - Split cash flow from spending summaries
 
-**Decided:** Add `Cash Flow Summary` for cash-account inflows, outflows, net external cash flow, and excluded transfer/payment activity. Rename the monthly category rollup to `Spending Summary` and keep it focused on spending categories and personal/family owner buckets.
+**Decided:** Add `Cash Flow Summary` for cash-account inflows, outflows, net cash flow, and excluded transfer/payment activity. Rename the monthly category rollup to `Spending Summary` and keep it focused on spending categories and personal/family owner buckets.
 
 **Rejected:** Treat internal transfers, Venmo cashouts, and credit-card payments as ordinary personal/family spending.
 

@@ -52,7 +52,7 @@ Start with these tabs:
 - `transactions`: main review surface for categories, owner buckets, source files, and transfer flags.
 - `venmo_activity`: review raw Venmo export activity and whether each row linked to a bank transaction.
 - `reconciliation`: compare statement metadata against transaction totals.
-- `Cash Flow Summary`: review cash in, cash out, net external cash flow, YTD cash flow, annual cash-flow totals, and cash movements excluded from spending.
+- `Cash Flow Summary`: review cash in, cash out, net cash flow, YTD cash flow, annual cash-flow totals, and cash movements excluded from spending.
 - `Spending Summary`: review spending by main category and subcategory across months, with personal/family owner bucket totals below.
 - `Categories & Budget`: enter optional monthly targets next to main categories or combined categories. Summaries use these targets for budget variance columns, with missed targets shown in red.
 - `Income Summary`: review true income actuals and optional expected income comparisons. Expected income targets come from income-source rows in `config/budget_targets.csv`, usually with `target_type` set to `min`.

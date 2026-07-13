@@ -37,7 +37,7 @@ class WorkbookWriterTests(unittest.TestCase):
                 ("Transactions", 52, "Normalized rows after duplicate removal."),
                 ("Observed income", 1000, "Positive transactions categorized as income."),
                 ("Net spending", 500, "Spending after refunds; transfers and card payments excluded."),
-                ("Net external cash flow", 250, "Cash-account inflows less outflows, excluding internal transfers."),
+                ("Net cash flow", 250, "Cash-account inflows less outflows, excluding internal transfers."),
                 ("Needs review", 2, "Items consolidated on the Needs Review sheet."),
             ],
             income_routing_enabled=False,
@@ -52,7 +52,7 @@ class WorkbookWriterTests(unittest.TestCase):
         self.assertEqual(worksheet["D9"].value, "Transactions")
         self.assertEqual(worksheet["G9"].value, "Observed income")
         self.assertEqual(worksheet["A13"].value, "Net spending")
-        self.assertEqual(worksheet["D13"].value, "Net external cash flow")
+        self.assertEqual(worksheet["D13"].value, "Net cash flow")
         self.assertEqual(worksheet["G13"].value, "Needs review")
         self.assertIn("A9:C9", merged_ranges)
         self.assertIn("D9:F9", merged_ranges)

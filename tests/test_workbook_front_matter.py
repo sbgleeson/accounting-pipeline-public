@@ -75,7 +75,7 @@ class WorkbookFrontMatterTests(unittest.TestCase):
 
         self.assertEqual(metrics["Observed income"], Decimal("1000.00"))
         self.assertEqual(metrics["Net spending"], Decimal("100.00"))
-        self.assertEqual(metrics["Net external cash flow"], Decimal("900.00"))
+        self.assertEqual(metrics["Net cash flow"], Decimal("900.00"))
 
     def test_overview_metrics_roll_unmatched_venmo_into_needs_review_only(self) -> None:
         rows = [
