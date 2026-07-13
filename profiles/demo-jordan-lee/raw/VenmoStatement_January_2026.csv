@@ -2,4 +2,4 @@ Account Statement - January 2026,,,,,,,,,,,
 Synthetic demo data only,,,,,,,,,,,
 ID,Datetime,Type,Status,Note,From,To,Amount (total),Funding Source,Destination,Beginning Balance,Ending Balance
 ,,,,,,,,,,,
-demo-jan-001,2026-01-18T18:45:00,Payment,Complete,Dinner split,Jordan Lee,Maya Chen,- $42.50,JPMORGAN CHASE *4101,,0.00,0.00
+demo-jan-001,2026-01-18T18:45:00,Payment,Complete,Dinner split,Jordan Lee,Maya Chen,- $42.50,DEMO BANK *4101,,0.00,0.00

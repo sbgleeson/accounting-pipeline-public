@@ -44,8 +44,8 @@ contains,HELP HBOMAX COM HBOMAX COM,HBOMAX,Entertainment – Streaming
 contains,APPLE COM US,APPLE,Shopping – Technology / Electronics
 contains,RECLECTIC,RECLECTIC,Shopping – Household
 contains,VENMO CASHOUT,VENMO CASHOUT,Transfers – Zelle / Peer Transfer
-contains,CHASE CARD PAYMENT,CHASE CARD PAYMENT,Financial – Credit Card Payment
-contains,PAYMENT THANK YOU,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,CREDIT CARD PAYMENT,CREDIT CARD PAYMENT,Financial – Credit Card Payment
+contains,PAYMENT THANK YOU,CREDIT CARD PAYMENT,Financial – Credit Card Payment
 contains,CASH REDEMPTION,CASH REDEMPTION,Financial – Other
 contains,SCHWAB BROKERAGE MONEYLINK,SCHWAB BROKERAGE MONEYLINK,Transfers – Other
 contains,TRI POINT ELECTR,TRI-POINT ELECTRIC,Housing – Repairs
@@ -108,8 +108,8 @@ contains,GIRLS AUTO CLINIC,GIRLS AUTO CLINIC,Auto + Transport – Maintenance
 contains,AMERICAN AIR,AMERICAN AIRLINES,Travel – Flights
 contains,SPREAD BAGELRY,SPREAD BAGELRY,Food – Coffee / Cafes
 contains,BKST U PENN,U PENN BOOKSTORE,Entertainment – Books / Media
-contains,AUTOMATIC PAYMENT THANK,CHASE CARD PAYMENT,Financial – Credit Card Payment
-contains,CHASE CREDIT CRD AUTOPAY,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,AUTOMATIC PAYMENT THANK,CREDIT CARD PAYMENT,Financial – Credit Card Payment
+contains,CREDIT CARD AUTOPAY,CREDIT CARD PAYMENT,Financial – Credit Card Payment
 contains,WAWA,WAWA,Auto + Transport – Fuel
 contains,SMARTMICROOPTICS,SMARTMICROOPTICS,Shopping – Technology / Electronics
 contains,QUICKEN INC,QUICKEN,Shopping – Software / Digital Services

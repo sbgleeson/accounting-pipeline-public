@@ -13,9 +13,9 @@ It is built for local files only. It does not connect to banks, credit cards, Ve
 You need:
 
 - Python 3.9 or newer.
-- Chase checking or savings CSV exports, if available.
-- Chase credit-card CSV exports, if available.
-- Chase statement PDFs, if available.
+- Checking or savings CSV exports, if available.
+- Credit-card CSV exports, if available.
+- Statement PDFs, if available.
 - Venmo statement CSV exports, if available.
 
 The pipeline can run with partial source files, but the workbook can only report on the accounts and periods you load.
@@ -57,9 +57,9 @@ Use the month you are reviewing or closing, not the month when you downloaded th
 
 Supported source files:
 
-- Chase bank CSV exports for checking and savings.
-- Chase credit-card CSV exports.
-- Chase statement PDFs for configured accounts.
+- Bank CSV exports for checking and savings.
+- Credit-card CSV exports.
+- Statement PDFs for configured accounts.
 - Venmo statement CSV exports named like `VenmoStatement_June_2026.csv`.
 
 Do not edit raw exports. If something needs correction, add a rule or review decision in `config/`.
@@ -85,7 +85,7 @@ Check these columns:
 - `account_type`: usually `checking`, `savings`, or `credit_card`.
 - `default_bucket`: reporting owner bucket, such as `Personal`, `Family`, `Household`, or `Credit`.
 - `schema`: `bank` for checking/savings exports, `card` for credit-card exports.
-- `file_match`: filename tokens that identify this account. Use `|` for alternate tokens, such as `3003|Chasenull`.
+- `file_match`: filename tokens that identify this account. Use `|` for alternate tokens, such as `3003|CardExport`.
 
 If the generated account config is wrong, edit `accounts.csv` before running ingest.
 
@@ -104,7 +104,7 @@ profiles/my-family/output/normalized_transactions.csv
 profiles/my-family/output/normalized_transactions.xlsx
 ```
 
-The command prints how many raw Chase rows were loaded, how many duplicates were removed, and how many normalized rows were kept.
+The command prints how many raw bank rows were loaded, how many duplicates were removed, and how many normalized rows were kept.
 
 ## 5. Review The Workbook
 
@@ -123,7 +123,7 @@ Start with:
 - `Income Summary`: true income by source.
 - `Cash Flow Summary`: cash in, cash out, net external cash flow, YTD cash flow, annual cash-flow totals, transfer diagnostics, and needs-review cash out.
 - `transactions`: normalized transaction detail, newest first.
-- `venmo_activity`: raw Venmo export activity with Chase link status.
+- `venmo_activity`: raw Venmo export activity with bank link status.
 - `reconciliation`: statement metadata and transaction coverage checks.
 
 Older month columns and subcategory rows may be grouped or collapsed. Expand them when you need history.

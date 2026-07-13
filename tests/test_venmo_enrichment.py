@@ -13,12 +13,12 @@ from accounting_pipeline.transforms.venmo_enrichment import (
     apply_venmo_transfer_support,
     deduplicate_activities,
     enrich_with_venmo,
-    extract_chase_venmo_name,
+    extract_bank_venmo_name,
     find_cashout_match,
     find_cashout_transfer_support,
     find_outgoing_payment_match,
-    is_chase_venmo_cashout,
-    is_chase_venmo_payment,
+    is_bank_venmo_cashout,
+    is_bank_venmo_payment,
     names_match,
 )
 
@@ -60,22 +60,22 @@ def build_activity(**overrides: object) -> VenmoActivity:
 
 
 class VenmoEnrichmentTests(unittest.TestCase):
-    def test_extract_chase_venmo_name(self) -> None:
+    def test_extract_bank_venmo_name(self) -> None:
         self.assertEqual(
-            extract_chase_venmo_name("VENMO *Casey Martin Visa Direct NY        03/11"),
+            extract_bank_venmo_name("VENMO *Casey Martin Visa Direct NY        03/11"),
             "CASEY MARTIN",
         )
 
-    def test_names_match_allows_chase_truncated_counterparty_names(self) -> None:
+    def test_names_match_allows_bank_truncated_counterparty_names(self) -> None:
         self.assertTrue(names_match("SAM GRAY", "Sam Grayson"))
         self.assertTrue(names_match("ALEXANDER KIM", "Alexander Kimball"))
         self.assertFalse(names_match("SARAF S", "Camilla Z"))
 
-    def test_detects_chase_venmo_patterns(self) -> None:
+    def test_detects_bank_venmo_patterns(self) -> None:
         payment = build_transaction(description="VENMO *Casey Martin Visa Direct NY", amount=Decimal("-300.00"))
         cashout = build_transaction(description="VENMO CASHOUT PPD ID: 5264681992", amount=Decimal("4000.00"))
-        self.assertTrue(is_chase_venmo_payment(payment))
-        self.assertTrue(is_chase_venmo_cashout(cashout))
+        self.assertTrue(is_bank_venmo_payment(payment))
+        self.assertTrue(is_bank_venmo_cashout(cashout))
 
     def test_finds_outgoing_payment_match(self) -> None:
         row = build_transaction(
@@ -185,7 +185,7 @@ class VenmoEnrichmentTests(unittest.TestCase):
             note="",
             from_name="",
             to_name="",
-            destination="JPMORGAN CHASE *1001",
+            destination="DEMO BANK *1001",
         )
         self.assertEqual(find_cashout_match(row, [payment], [transfer]), payment)
 
@@ -204,7 +204,7 @@ class VenmoEnrichmentTests(unittest.TestCase):
             note="",
             from_name="",
             to_name="",
-            destination="JPMORGAN CHASE *1001",
+            destination="DEMO BANK *1001",
         )
 
         self.assertEqual(find_cashout_transfer_support(row, [transfer]), [transfer])
@@ -224,7 +224,7 @@ class VenmoEnrichmentTests(unittest.TestCase):
             note="",
             from_name="",
             to_name="",
-            destination="JPMORGAN CHASE *1001",
+            destination="DEMO BANK *1001",
         )
 
         enrich_with_venmo([row], [transfer])

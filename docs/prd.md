@@ -4,7 +4,7 @@
 
 ## Problem
 
-Personal accounting review currently depends on Chase exports, Venmo activity, statement PDFs, category templates, and manual spreadsheet cleanup. The painful part is combining several account formats into one trustworthy review workbook, preserving traceability back to source files, identifying internal transfers, and surfacing transactions that need human review without redoing the same cleanup every month.
+Personal accounting review currently depends on bank and card exports, Venmo activity, statement PDFs, category templates, and manual spreadsheet cleanup. The painful part is combining several account formats into one trustworthy review workbook, preserving traceability back to source files, identifying internal transfers, and surfacing transactions that need human review without redoing the same cleanup every month.
 
 ## Users
 
@@ -18,7 +18,7 @@ Personal accounting review currently depends on Chase exports, Venmo activity, s
 
 ## User Stories
 
-- As the product owner, I want to drop monthly Chase CSV exports, Chase statement PDFs, and Venmo statement CSVs into a known input folder so that I can regenerate the accounting workbook without manual spreadsheet assembly.
+- As the product owner, I want to drop monthly bank CSV exports, statement PDFs, and Venmo statement CSVs into a known input folder so that I can regenerate the accounting workbook without manual spreadsheet assembly.
 - As the product owner, I want transactions from checking, savings, credit card, and Venmo-related activity normalized into one schema so that I can review spending across accounts consistently.
 - As the product owner, I want internal transfers and credit-card payments identified separately from spending so that summaries do not overstate expenses.
 - As the product owner, I want Venmo memos and counterparties to help classify the underlying spending, reimbursement, or transfer activity so that Venmo does not appear only as a generic transfer.
@@ -36,7 +36,7 @@ Personal accounting review currently depends on Chase exports, Venmo activity, s
 
 ### Local Ingestion
 
-Read source files recursively from a selected `profiles/<name>/raw/` directory, including Chase bank CSVs, Chase credit card CSVs, Venmo statement CSVs, and statement PDFs for configured accounts. The legacy `input/raw/` location remains supported for backward compatibility.
+Read source files recursively from a selected `profiles/<name>/raw/` directory, including bank CSVs, credit-card CSVs, Venmo statement CSVs, and statement PDFs for configured accounts. The legacy `input/raw/` location remains supported for backward compatibility.
 
 ### Profile Isolation
 
@@ -54,14 +54,14 @@ Remove exact duplicate transaction rows and emit rows in a stable order so regen
 
 ### Venmo Enrichment
 
-Match Chase Venmo payment, charge, and cashout rows against Venmo activity exports when possible. Populate match status, match type, Venmo IDs, counterparties, notes, dates, and source files. Mark likely Venmo rows as unmatched when no support is found. Chase cashout deposits may be marked `transfer_supported` when a matching Venmo Standard Transfer to Chase exists, even if no single incoming Venmo payment explains the source balance.
+Match bank Venmo payment, charge, and cashout rows against Venmo activity exports when possible. Populate match status, match type, Venmo IDs, counterparties, notes, dates, and source files. Mark likely Venmo rows as unmatched when no support is found. Bank cashout deposits may be marked `transfer_supported` when a matching Venmo Standard Transfer to the linked bank account exists, even if no single incoming Venmo payment explains the source balance.
 
 Venmo data should support two separate interpretations:
 
-- **Cash movement:** money moving between Chase, Venmo balance, and counterparties.
+- **Cash movement:** money moving between linked bank accounts, Venmo balance, and counterparties.
 - **Underlying activity:** the real-world spending, reimbursement, income, gift, shared expense, or transfer described by the Venmo memo and counterparty.
 
-Outgoing Venmo payments may be spending when the memo/counterparty indicates a purchase or service. Incoming Venmo payments may be reimbursement, income, or another inflow type depending on context. Venmo cashouts from Venmo balance to Chase should remain transfer activity and should not double-count the underlying Venmo payments. A cashout may represent a bundle of prior payments or money held in Venmo balance, so matching should not require one same-amount incoming payment when the Standard Transfer to Chase supports the bank deposit.
+Outgoing Venmo payments may be spending when the memo/counterparty indicates a purchase or service. Incoming Venmo payments may be reimbursement, income, or another inflow type depending on context. Venmo cashouts from Venmo balance to the linked bank account should remain transfer activity and should not double-count the underlying Venmo payments. A cashout may represent a bundle of prior payments or money held in Venmo balance, so matching should not require one same-amount incoming payment when the Standard Transfer to the linked bank account supports the bank deposit.
 
 Refunds and reimbursements should be categorized back to the related spending category when the category can be inferred. If the related category is unclear, they should remain visible as review items rather than being treated as income.
 
@@ -71,7 +71,7 @@ Detect known internal transfers, assign categories from merchant mappings and de
 
 ### Review Workbook
 
-Generate `profiles/<name>/output/normalized_transactions.xlsx` with a presentation-oriented `Overview`, a consolidated `Needs Review` list, transaction detail, categories and budget targets, Venmo activity with Chase link status, reconciliation, spending summaries, income summaries, and cash-flow summaries. The workbook should include validation dropdowns, formatting, warning highlights, and formulas that support review.
+Generate `profiles/<name>/output/normalized_transactions.xlsx` with a presentation-oriented `Overview`, a consolidated `Needs Review` list, transaction detail, categories and budget targets, Venmo activity with bank link status, reconciliation, spending summaries, income summaries, and cash-flow summaries. The workbook should include validation dropdowns, formatting, warning highlights, and formulas that support review.
 
 The `Overview` sheet should lead with the loaded period, account and transaction counts, observed income, net spending, net external cash flow, savings/investing activity, and review counts. It must state that totals reflect only loaded accounts and files.
 
@@ -128,12 +128,12 @@ Generate `profiles/<name>/output/normalized_transactions.csv` with the same norm
 - Optional advanced CLI flags for direct input, output, account config, and target month overrides beyond named profiles.
 - Config-driven account registry instead of hard-coded account definitions.
 - Rule-learning workflow that turns reviewed workbook corrections into merchant mappings.
-- Import support for additional institutions beyond the current Chase and Venmo formats.
+- Import support for additional institutions beyond the current bank/card and payment-app formats.
 - Packaging and dependency setup that installs optional PDF parsing dependencies cleanly.
 
 ## Out Of Scope
 
-- Direct bank, credit-card, or Venmo API connections.
+- Direct bank, credit-card, or payment-service API connections.
 - Cloud hosting or multi-user web app behavior.
 - Tax filing, legal, or accounting advice.
 - Investment performance tracking, brokerage position tracking, or financial advice.

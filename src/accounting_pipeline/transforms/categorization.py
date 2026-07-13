@@ -20,7 +20,7 @@ from accounting_pipeline.models import Transaction
 EXACT_MATCH_RULES = [
     ("INTEREST PAYMENT", "Income – Interest"),
     ("PAYMENT THANK YOU WEB", "Financial – Credit Card Payment"),
-    ("PAYMENT TO CHASE CARD", "Financial – Credit Card Payment"),
+    ("PAYMENT TO CREDIT CARD", "Financial – Credit Card Payment"),
     ("VENMO CASHOUT", "Transfers – Zelle / Peer Transfer"),
 ]
 
@@ -201,10 +201,10 @@ def infer_canonical_merchant(
         return "INTERNAL TRANSFER"
 
     if raw_type == "PAYMENT" and "PAYMENT THANK YOU" in normalized_description:
-        return "CHASE CARD PAYMENT"
+        return "CREDIT CARD PAYMENT"
 
     if raw_type == "LOAN_PMT":
-        return "CHASE CARD PAYMENT"
+        return "CREDIT CARD PAYMENT"
 
     mapping = lookup_mapping(normalized_description, merchant_mapping_file)
     if mapping:

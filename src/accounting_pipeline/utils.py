@@ -27,7 +27,7 @@ def decimal_to_number(value: Decimal | None) -> float | None:
 
 
 def parse_date(value: str) -> datetime:
-    """Convert Chase date strings into datetime objects for Excel cells."""
+    """Convert bank export date strings into datetime objects for Excel cells."""
     return datetime.strptime(value, "%m/%d/%Y")
 
 

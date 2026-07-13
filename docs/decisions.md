@@ -12,7 +12,7 @@
 
 ## 2026-06-15 - Define the MVP as a local accounting pipeline
 
-**Decided:** Document the current MVP as a local Python workflow that reads Chase, Venmo, template, and statement files from the repo, then generates normalized CSV and Excel review outputs.
+**Decided:** Document the current MVP as a local Python workflow that reads bank, card, payment-app, template, and statement files from the repo, then generates normalized CSV and Excel review outputs.
 
 **Rejected:** Reframe the project as a web app, cloud service, or direct bank-integration product.
 
@@ -76,15 +76,15 @@
 
 ## 2026-06-17 - Treat Venmo as both cash movement and underlying activity
 
-**Decided:** Venmo rows need a two-layer model. Chase/Venmo transfer mechanics should remain visible for cash-flow traceability, but Venmo payment notes and counterparties should also be able to classify the underlying spending, reimbursement, or shared-expense activity.
+**Decided:** Venmo rows need a two-layer model. Bank/payment-app transfer mechanics should remain visible for cash-flow traceability, but Venmo payment notes and counterparties should also be able to classify the underlying spending, reimbursement, or shared-expense activity.
 
 **Rejected:** Treat every Venmo bank row as only a generic transfer, or treat Venmo cashouts as new income/spending that duplicates the original Venmo activity.
 
-**Why:** Venmo is often the best record of what actually happened. A payment to a plumber or a friend for dinner is spending even if the bank description says Venmo, while a Venmo cashout to Chase is only movement of money already represented by Venmo activity. Reimbursements should offset shared costs or receivables rather than inflate ordinary income.
+**Why:** Venmo is often the best record of what actually happened. A payment to a plumber or a friend for dinner is spending even if the bank description says Venmo, while a Venmo cashout to the linked bank account is only movement of money already represented by Venmo activity. Reimbursements should offset shared costs or receivables rather than inflate ordinary income.
 
-**Refined:** Mark Chase Venmo cashouts as `transfer_supported` when a same-amount Venmo Standard Transfer to the linked Chase account appears within the posting window, even if no single same-amount incoming Venmo payment exists. This keeps supported balance transfers out of `Needs Review` while avoiding a false claim about the underlying source of Venmo balance.
+**Refined:** Mark bank cashouts as `transfer_supported` when a same-amount Venmo Standard Transfer to the linked bank account appears within the posting window, even if no single same-amount incoming Venmo payment exists. This keeps supported balance transfers out of `Needs Review` while avoiding a false claim about the underlying source of Venmo balance.
 
-**Refined:** Use one raw-activity-centered `venmo_activity` workbook sheet instead of a Chase-row-centered `venmo_matches` sheet. Each Venmo export row appears once with columns showing whether it linked to a Chase transaction. Completed Venmo `Charge` rows can match outgoing Chase Venmo debits, with the counterparty read from the Venmo `From` field.
+**Refined:** Use one raw-activity-centered `venmo_activity` workbook sheet instead of a bank-row-centered `venmo_matches` sheet. Each Venmo export row appears once with columns showing whether it linked to a bank transaction. Completed Venmo `Charge` rows can match outgoing bank Venmo debits, with the counterparty read from the Venmo `From` field.
 
 ## 2026-06-18 - Expand categories for budget planning
 

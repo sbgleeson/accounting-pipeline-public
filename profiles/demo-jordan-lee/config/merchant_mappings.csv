@@ -16,7 +16,7 @@ contains,CLOUDNOTE,CLOUDNOTE,Shopping – Software / Digital Services
 contains,TECH DEPOT,TECH DEPOT,Shopping – Technology / Electronics
 contains,COMMUNITY FOOD FUND,COMMUNITY FOOD FUND,Giving – Charitable Giving
 contains,VANGUARD BROKERAGE,VANGUARD BROKERAGE,Investing – Brokerage Contribution
-contains,PAYMENT THANK YOU,CHASE CARD PAYMENT,Financial – Credit Card Payment
-contains,PAYMENT TO CHASE CARD,CHASE CARD PAYMENT,Financial – Credit Card Payment
+contains,PAYMENT THANK YOU,CREDIT CARD PAYMENT,Financial – Credit Card Payment
+contains,PAYMENT TO CREDIT CARD,CREDIT CARD PAYMENT,Financial – Credit Card Payment
 contains,INTEREST PAYMENT,INTEREST PAYMENT,Income – Interest
 contains,VENMO CASHOUT,VENMO CASHOUT,Transfers – Zelle / Peer Transfer

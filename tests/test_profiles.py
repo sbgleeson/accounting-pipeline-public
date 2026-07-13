@@ -57,7 +57,7 @@ def write_account_config(paths: PipelinePaths, account_id: str) -> None:
 
 def write_bank_export(paths: PipelinePaths, account_id: str, amount: str) -> None:
     paths.raw_dir.mkdir(parents=True, exist_ok=True)
-    source_file = paths.raw_dir / f"Chase{account_id}_Activity.csv"
+    source_file = paths.raw_dir / f"Bank{account_id}_Activity.csv"
     source_file.write_text(
         "Details,Posting Date,Description,Amount,Type,Balance,Check or Slip #\n"
         f"CREDIT,01/02/2026,PROFILE {account_id},{amount},ACH_CREDIT,1000.00,\n",
