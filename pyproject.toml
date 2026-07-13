@@ -8,6 +8,9 @@ version = "0.1.0"
 description = "Personal accounting normalization and workbook generation pipeline."
 readme = "README.md"
 requires-python = ">=3.9"
+dependencies = [
+    "openpyxl>=3.1",
+]
 
 [project.scripts]
 accounting-pipeline = "accounting_pipeline.cli:main"
