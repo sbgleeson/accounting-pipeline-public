@@ -347,13 +347,13 @@ def populate_summary_front_matter(
     subtitle: str,
     cards: list[tuple[str, str]],
 ) -> None:
-    """Add a large title and four formula-backed summary cards."""
-    title_end_column = get_column_letter(max(worksheet.max_column, 8))
+    """Add a large title and formula-backed summary cards."""
+    card_ranges = (("A", "B"), ("C", "D"), ("E", "F"), ("G", "H"))
+    title_end_column = get_column_letter(max(worksheet.max_column, len(cards) * 2))
     worksheet.merge_cells(f"A1:{title_end_column}1")
     worksheet["A1"] = title
     worksheet.merge_cells(f"A2:{title_end_column}2")
     worksheet["A2"] = subtitle
-    card_ranges = (("A", "B"), ("C", "D"), ("E", "F"), ("G", "H"))
     for (label, formula), (start_column, end_column) in zip(cards, card_ranges):
         worksheet.merge_cells(f"{start_column}4:{end_column}4")
         worksheet.merge_cells(f"{start_column}5:{end_column}5")
@@ -836,8 +836,6 @@ def write_excel_output(
     cash_in_row = cash_first_data_row
     cash_out_row = cash_first_data_row + 1
     cash_net_row = cash_first_data_row + 2
-    cash_ytd_column = total_column + 1
-    cash_ytd_letter = get_column_letter(cash_ytd_column)
     populate_summary_front_matter(
         cash_flow_summary_ws,
         "Cash Flow Summary",
@@ -846,7 +844,6 @@ def write_excel_output(
             ("Latest cash in", f"={latest_month_letter}{cash_in_row}"),
             ("Latest cash out", f"={latest_month_letter}{cash_out_row}"),
             ("Latest net cash flow", f"={latest_month_letter}{cash_net_row}"),
-            ("YTD net cash flow", f"={cash_ytd_letter}{cash_net_row}"),
         ],
     )
 
@@ -980,7 +977,6 @@ def write_excel_output(
     attention_fill = PatternFill(fill_type="solid", fgColor="FFF2CC")
     overview_hero_fill = PatternFill(fill_type="solid", fgColor="1F4E78")
     overview_scope_fill = PatternFill(fill_type="solid", fgColor="DDEBF7")
-    overview_review_fill = PatternFill(fill_type="solid", fgColor="FCE4D6")
     overview_flow_fill = PatternFill(fill_type="solid", fgColor="F7F9FB")
     bold_font = Font(bold=True, color="FFFFFF")
     dark_bold_font = Font(bold=True)
@@ -1039,7 +1035,7 @@ def write_excel_output(
         overview_scope_fill,
         overview_scope_fill,
         overview_scope_fill,
-        overview_review_fill,
+        warning_fill,
     )
     overview_card_positions = (
         (9, "A", "C"),
@@ -1089,7 +1085,12 @@ def write_excel_output(
         summary_ws["A2"].alignment = Alignment(wrap_text=True)
         summary_ws.row_dimensions[1].height = 28
         summary_ws.row_dimensions[2].height = 30
-        for start_column, end_column in (("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")):
+        for index, (start_column, end_column) in enumerate(
+            (("A", "B"), ("C", "D"), ("E", "F"), ("G", "H")),
+            start=1,
+        ):
+            if (index * 2) - 1 > summary_ws.max_column:
+                continue
             for row_number in (4, 5):
                 for row in summary_ws[f"{start_column}{row_number}:{end_column}{row_number}"]:
                     for cell in row:
@@ -1236,8 +1237,9 @@ def write_excel_output(
         SUMMARY_TABLE_START_ROW + 7,
         SUMMARY_TABLE_START_ROW + 12,
     ):
+        row_fill = warning_fill if row_number == SUMMARY_TABLE_START_ROW + 12 else summary_fill
         for cell in cash_flow_summary_ws[row_number]:
-            cell.fill = summary_fill
+            cell.fill = row_fill
             cell.font = dark_bold_font
     cash_flow_net_row = SUMMARY_TABLE_START_ROW + 5
     cash_flow_value_columns = (

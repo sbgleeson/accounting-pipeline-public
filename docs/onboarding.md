@@ -121,7 +121,7 @@ Start with:
 - `Categories & Budget`: editable budget reality, targets, target types, review status, and notes.
 - `Spending Summary`: spending by category and month.
 - `Income Summary`: true income by source.
-- `Cash Flow Summary`: cash in, cash out, net external cash flow, YTD cash flow, annual cash-flow totals, transfer diagnostics, and needs-review cash out.
+- `Cash Flow Summary`: cash in, cash out, net cash flow, YTD cash flow, annual cash-flow totals, transfer diagnostics, and needs-review cash out.
 - `transactions`: normalized transaction detail, newest first.
 - `venmo_activity`: raw Venmo export activity with bank link status.
 - `reconciliation`: statement metadata and transaction coverage checks.

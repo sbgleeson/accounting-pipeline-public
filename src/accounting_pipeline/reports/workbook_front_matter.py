@@ -136,7 +136,7 @@ def build_overview_metrics(
         ("Observed income", income, "Positive transactions categorized as income."),
         ("Net spending", net_spending, "Spending after refunds; transfers and card payments excluded."),
         (
-            "Net external cash flow",
+            "Net cash flow",
             external_cash_flow,
             "Cash-account inflows less outflows, excluding internal transfers.",
         ),

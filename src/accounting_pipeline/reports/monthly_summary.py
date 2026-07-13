@@ -436,22 +436,19 @@ def populate_cash_flow_summary(
 
     total_column = len(reporting_months) + 2
     worksheet.cell(row=start_row, column=total_column).value = "Total"
-    ytd_columns = get_ytd_columns(reporting_months)
-    ytd_column = total_column + 1
-    worksheet.cell(row=start_row, column=ytd_column).value = "YTD"
     latest_year = reporting_months[-1][0].year if reporting_months else None
     year_columns: dict[int, list[int]] = {}
     for column_number, (month_start, _month_end, _sheet_name) in enumerate(reporting_months, start=2):
         year_columns.setdefault(month_start.year, []).append(column_number)
-    first_year_summary_column = ytd_column + 1
+    first_year_summary_column = total_column + 1
     for offset, year in enumerate(sorted(year_columns)):
         header = f"{year} YTD" if year == latest_year else f"{year} total"
         worksheet.cell(row=start_row, column=first_year_summary_column + offset).value = header
 
     row_labels = [
         "Cash in",
-        "Cash out - spending",
-        "Net external cash flow",
+        "Cash out",
+        "Net cash flow",
         "",
         "Excluded cash out from spending",
         "Internal transfers out",
@@ -518,16 +515,6 @@ def populate_cash_flow_summary(
                     if worksheet[f"A{row_number}"].value == ""
                     else f"=SUM(B{row_number}:{last_month_column}{row_number})"
                 )
-    ytd_cells_by_row = {
-        row_number: ",".join(f"{get_column_letter(column_number)}{row_number}" for column_number in ytd_columns)
-        for row_number in range(first_data_row, first_data_row + len(row_labels))
-    }
-    for row_number, ytd_cells in ytd_cells_by_row.items():
-        worksheet.cell(row=row_number, column=ytd_column).value = (
-            ""
-            if worksheet[f"A{row_number}"].value == ""
-            else f"=SUM({ytd_cells})" if ytd_cells else ""
-        )
     for offset, year in enumerate(sorted(year_columns)):
         year_summary_column = first_year_summary_column + offset
         for row_number in range(first_data_row, first_data_row + len(row_labels)):

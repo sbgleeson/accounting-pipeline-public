@@ -369,9 +369,10 @@ class MonthlySummaryReportTests(unittest.TestCase):
         self.assertEqual(worksheet["A1"].value, "Cash flow")
         self.assertEqual(worksheet["B1"].value, "Feb 2026")
         self.assertEqual(worksheet["C1"].value, "Total")
-        self.assertEqual(worksheet["D1"].value, "YTD")
-        self.assertEqual(worksheet["E1"].value, "2026 YTD")
+        self.assertEqual(worksheet["D1"].value, "2026 YTD")
         self.assertEqual(worksheet["A4"].value, "Cash in")
+        self.assertEqual(worksheet["A5"].value, "Cash out")
+        self.assertEqual(worksheet["A6"].value, "Net cash flow")
         self.assertEqual(
             worksheet["B4"].value,
             '=SUMIFS(transactions!$J$2:$J$171,transactions!$G$2:$G$171,">="&B$2,'
@@ -390,8 +391,7 @@ class MonthlySummaryReportTests(unittest.TestCase):
         self.assertEqual(worksheet["A14"].value, "Uncategorized - Needs Review cash out")
         self.assertEqual(worksheet["C14"].value, "=SUM(B14:B14)")
         self.assertEqual(worksheet["D14"].value, "=SUM(B14)")
-        self.assertEqual(worksheet["E14"].value, "=SUM(B14)")
-        self.assertIsNone(worksheet["F1"].value)
+        self.assertIsNone(worksheet["E1"].value)
 
 
 if __name__ == "__main__":
