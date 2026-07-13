@@ -1254,10 +1254,13 @@ def write_excel_output(
         get_column_letter(average_variance_column),
     )
     for summary_ws in (monthly_summary_ws, income_summary_ws):
+        variance_end_row = bucket_header_row - 2 if summary_ws is monthly_summary_ws else summary_ws.max_row
         for variance_column_letter in variance_column_letters:
+            if variance_end_row < SUMMARY_TABLE_START_ROW + 3:
+                continue
             variance_range = (
                 f"{variance_column_letter}{SUMMARY_TABLE_START_ROW + 3}:"
-                f"{variance_column_letter}{summary_ws.max_row}"
+                f"{variance_column_letter}{variance_end_row}"
             )
             summary_ws.conditional_formatting.add(
                 variance_range,

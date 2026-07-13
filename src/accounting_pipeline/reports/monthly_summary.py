@@ -268,19 +268,14 @@ def populate_monthly_summary(
             worksheet.cell(row=total_row_number, column=column_number).value = f"=SUM({child_cells})"
         populate_spending_budget_cells(total_row_number)
 
+    latest_month_column = total_column - 1
+    compact_ytd_column = target_column
+    compact_average_column = monthly_variance_column
     bucket_start_row = row_number + 1
-    worksheet[f"A{bucket_start_row}"] = "Owner bucket"
-    for column_number, (month_start, _month_end, _sheet_name) in enumerate(reporting_months, start=2):
-        worksheet.cell(row=bucket_start_row, column=column_number).value = f"{month_start:%b %Y} spend"
-    worksheet.cell(row=bucket_start_row, column=total_column).value = "Total"
-    worksheet.cell(row=bucket_start_row, column=target_column).value = "Monthly target"
-    worksheet.cell(row=bucket_start_row, column=target_type_column).value = "Target type"
-    worksheet.cell(row=bucket_start_row, column=monthly_variance_column).value = "Monthly variance"
-    worksheet.cell(row=bucket_start_row, column=ytd_actual_column).value = "YTD actual"
-    worksheet.cell(row=bucket_start_row, column=ytd_target_column).value = "YTD target"
-    worksheet.cell(row=bucket_start_row, column=ytd_variance_column).value = "YTD variance"
-    worksheet.cell(row=bucket_start_row, column=average_column).value = "Monthly average"
-    worksheet.cell(row=bucket_start_row, column=average_variance_column).value = "Average variance"
+    worksheet[f"A{bucket_start_row}"] = "Owner bucket summary"
+    worksheet.cell(row=bucket_start_row, column=latest_month_column).value = "Latest month"
+    worksheet.cell(row=bucket_start_row, column=compact_ytd_column).value = "YTD actual"
+    worksheet.cell(row=bucket_start_row, column=compact_average_column).value = "Monthly average"
 
     for row_number, owner_bucket in enumerate(
         get_spending_owner_buckets(owner_buckets, credit_bucket),
@@ -298,7 +293,11 @@ def populate_monthly_summary(
                 f'{category_range},"<>Transfers*",{category_range},"<>Income*",'
                 f'{category_range},"<>Financial – Credit Card Payment"))'
             )
-        worksheet.cell(row=row_number, column=total_column).value = f"=SUM({','.join(month_cells)})"
+        worksheet.cell(row=row_number, column=compact_ytd_column).value = f"=SUM({','.join(month_cells)})"
+        worksheet.cell(row=row_number, column=compact_average_column).value = (
+            f'=IF({get_column_letter(compact_ytd_column)}{row_number}="","",'
+            f'{get_column_letter(compact_ytd_column)}{row_number}/{max(len(reporting_months), 1)})'
+        )
 
 
 def populate_income_summary(

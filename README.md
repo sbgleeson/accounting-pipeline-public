@@ -65,7 +65,7 @@ Its fictional source files and configuration live under `profiles/demo-jordan-le
 The workbook begins with `Overview` and `Needs Review`. Profiles can optionally
 enable a family-specific `Income Routing Review` in `config/profile_settings.csv`.
 Profile-level starting targets can be stored in `config/budget_targets.csv`; the
-synthetic Jordan profile includes a complete fictional monthly plan.
+synthetic Jordan profile includes a complete fictional household monthly plan.
 
 ### Project Layout
 
