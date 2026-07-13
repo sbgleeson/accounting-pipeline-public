@@ -109,17 +109,6 @@ def build_overview_metrics(
         ),
         Decimal("0.00"),
     )
-    savings_and_investing = -sum(
-        (
-            row.amount
-            for row in rows
-            if row.amount < 0
-            and (row.category.startswith("Savings") or row.category.startswith("Investing"))
-        ),
-        Decimal("0.00"),
-    )
-    unmatched_venmo = sum(row.venmo_match_status == "unmatched" for row in rows)
-
     return [
         (
             "Loaded period",
@@ -135,11 +124,5 @@ def build_overview_metrics(
             external_cash_flow,
             "Cash-account inflows less outflows, excluding internal transfers.",
         ),
-        (
-            "Savings + investing",
-            savings_and_investing,
-            "Outflows categorized as savings or investing.",
-        ),
         ("Needs review", review_item_count, "Items consolidated on the Needs Review sheet."),
-        ("Unmatched Venmo", unmatched_venmo, "Venmo-related bank rows without one clear activity match."),
     ]

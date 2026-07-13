@@ -4,9 +4,11 @@ import sys
 import unittest
 from pathlib import Path
 
+from openpyxl import Workbook
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from accounting_pipeline.output.workbook_writer import get_group_main_rows
+from accounting_pipeline.output.workbook_writer import get_group_main_rows, populate_overview_sheet
 
 
 class WorkbookWriterTests(unittest.TestCase):
@@ -17,6 +19,49 @@ class WorkbookWriterTests(unittest.TestCase):
         ]
 
         self.assertEqual(get_group_main_rows(groups), [10, 13])
+
+    def test_overview_loaded_period_gets_full_width_hero_position(self) -> None:
+        workbook = Workbook()
+        worksheet = workbook.active
+
+        populate_overview_sheet(
+            worksheet,
+            metrics=[
+                ("Loaded period", "Jan 01, 2026 – Mar 31, 2026", "Date range represented by loaded transactions."),
+                ("Accounts", 3, "Configured accounts included in this workbook."),
+                ("Transactions", 52, "Normalized rows after duplicate removal."),
+                ("Observed income", 1000, "Positive transactions categorized as income."),
+                ("Net spending", 500, "Spending after refunds; transfers and card payments excluded."),
+                ("Net external cash flow", 250, "Cash-account inflows less outflows, excluding internal transfers."),
+                ("Needs review", 2, "Items consolidated on the Needs Review sheet."),
+            ],
+            income_routing_enabled=False,
+        )
+
+        merged_ranges = {str(merged_range) for merged_range in worksheet.merged_cells.ranges}
+        self.assertIn("A5:I5", merged_ranges)
+        self.assertIn("A6:I6", merged_ranges)
+        self.assertEqual(worksheet["A5"].value, "Loaded period")
+        self.assertEqual(worksheet["A6"].value, "Jan 01, 2026 – Mar 31, 2026")
+        self.assertEqual(worksheet["A9"].value, "Accounts")
+        self.assertEqual(worksheet["D9"].value, "Transactions")
+        self.assertEqual(worksheet["G9"].value, "Observed income")
+        self.assertEqual(worksheet["A13"].value, "Net spending")
+        self.assertEqual(worksheet["D13"].value, "Net external cash flow")
+        self.assertEqual(worksheet["G13"].value, "Needs review")
+        self.assertIn("A9:C9", merged_ranges)
+        self.assertIn("D9:F9", merged_ranges)
+        self.assertIn("G9:I9", merged_ranges)
+        self.assertIn("A13:C13", merged_ranges)
+        self.assertIn("D13:F13", merged_ranges)
+        self.assertIn("G13:I13", merged_ranges)
+        self.assertEqual(worksheet["A19"].value, "Step")
+        self.assertEqual(worksheet["B19"].value, "Where to go")
+        self.assertEqual(worksheet["E19"].value, "What to check")
+        self.assertEqual(worksheet["A20"].value, "1")
+        self.assertEqual(worksheet["B20"].value, "Needs Review")
+        self.assertIn("B20:D20", merged_ranges)
+        self.assertIn("E20:I20", merged_ranges)
 
 
 if __name__ == "__main__":
