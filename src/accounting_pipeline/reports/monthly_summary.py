@@ -19,8 +19,10 @@ BUDGET_TARGET_TYPE_COLUMN = "H"
 def get_budget_target_formula(label_cell: str) -> str:
     """Return a formula that looks up an editable monthly target by summary label."""
     return (
-        f'=IFERROR(SUMIFS({BUDGET_SHEET_NAME}!${BUDGET_TARGET_COLUMN}:${BUDGET_TARGET_COLUMN},'
-        f'{BUDGET_SHEET_NAME}!$A:$A,{label_cell}),"")'
+        f'=IF(COUNTIFS({BUDGET_SHEET_NAME}!$A:$A,{label_cell},'
+        f'{BUDGET_SHEET_NAME}!${BUDGET_TARGET_COLUMN}:${BUDGET_TARGET_COLUMN},"<>")=0,"",'
+        f'IFERROR(SUMIFS({BUDGET_SHEET_NAME}!${BUDGET_TARGET_COLUMN}:${BUDGET_TARGET_COLUMN},'
+        f'{BUDGET_SHEET_NAME}!$A:$A,{label_cell}),""))'
     )
 
 
@@ -390,10 +392,16 @@ def populate_income_summary(
         target_type_letter = get_column_letter(target_type_column)
         child_target_cells = ",".join(f"{target_letter}{child_row}" for child_row in child_rows)
         worksheet.cell(row=total_row_number, column=target_column).value = (
-            f'=IF(COUNT({child_target_cells})=0,"",SUM({child_target_cells}))'
+            f'=IF(COUNTIFS(\'Categories & Budget\'!$A:$A,$A{total_row_number},'
+            f'\'Categories & Budget\'!$G:$G,"<>")>0,'
+            f'IFERROR(SUMIFS(\'Categories & Budget\'!$G:$G,'
+            f'\'Categories & Budget\'!$A:$A,$A{total_row_number}),""),'
+            f'IF(COUNT({child_target_cells})=0,"",SUM({child_target_cells})))'
         )
         worksheet.cell(row=total_row_number, column=target_type_column).value = (
-            f'=IF({target_letter}{total_row_number}="","","min")'
+            f'=IF({target_letter}{total_row_number}="","",'
+            f'IFERROR(INDEX(\'Categories & Budget\'!$H:$H,'
+            f'MATCH($A{total_row_number},\'Categories & Budget\'!$A:$A,0)),"min"))'
         )
 
 
