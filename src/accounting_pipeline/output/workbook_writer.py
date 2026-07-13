@@ -791,6 +791,7 @@ def write_excel_output(
     latest_month_letter = get_column_letter(latest_month_column)
     target_letter = get_column_letter(target_column)
     average_letter = get_column_letter(average_column)
+    ytd_actual_letter = get_column_letter(ytd_actual_column)
     ytd_variance_letter = get_column_letter(ytd_variance_column)
     average_column_letter = get_column_letter(average_column)
     populate_categories_budget_reality_formulas(categories_budget_ws, average_column_letter)
@@ -818,9 +819,7 @@ def write_excel_output(
     income_latest_cells = ",".join(f"{latest_month_letter}{row}" for row in income_main_rows)
     income_average_cells = ",".join(f"{average_letter}{row}" for row in income_main_rows)
     income_target_cells = ",".join(f"{target_letter}{row}" for row in income_main_rows)
-    income_review_count = "+".join(
-        f'COUNTIF({ytd_variance_letter}{row},"<0")' for row in income_main_rows
-    )
+    income_ytd_cells = ",".join(f"{ytd_actual_letter}{row}" for row in income_main_rows)
     populate_summary_front_matter(
         income_summary_ws,
         "Income Summary",
@@ -829,7 +828,7 @@ def write_excel_output(
             ("Latest month income", f"=SUM({income_latest_cells})"),
             ("Monthly average", f"=SUM({income_average_cells})"),
             ("Expected monthly income", f"=SUM({income_target_cells or '0'})"),
-            ("Income targets to review", f"={income_review_count or '0'}"),
+            ("YTD income", f"=SUM({income_ytd_cells})"),
         ],
     )
 
@@ -1097,9 +1096,11 @@ def write_excel_output(
                         cell.fill = summary_fill
                         cell.border = thin_gray_border
             summary_ws[f"{start_column}4"].font = dark_bold_font
+            summary_ws[f"{start_column}4"].alignment = Alignment(wrap_text=True, vertical="center")
             summary_ws[f"{start_column}5"].font = metric_value_font
             summary_ws[f"{start_column}5"].number_format = "$#,##0.00"
-        if summary_ws in (monthly_summary_ws, income_summary_ws):
+        summary_ws.row_dimensions[4].height = 34
+        if summary_ws is monthly_summary_ws:
             summary_ws["G5"].number_format = "0"
         for cell in summary_ws[SUMMARY_TABLE_START_ROW]:
             if cell.value is not None:
@@ -1217,6 +1218,13 @@ def write_excel_output(
         for cell in income_summary_ws[row_number]:
             cell.fill = category_fills.get(main_category, summary_fill)
             cell.font = dark_bold_font
+    income_summary_ws.row_dimensions[SUMMARY_TABLE_START_ROW].height = 36
+    for cell in income_summary_ws[SUMMARY_TABLE_START_ROW]:
+        if cell.value is not None:
+            cell.alignment = Alignment(wrap_text=True, vertical="center")
+    for row_number in range(SUMMARY_TABLE_START_ROW + 3, income_summary_ws.max_row + 1):
+        for cell in income_summary_ws[row_number]:
+            cell.alignment = Alignment(wrap_text=True)
     row_number = SUMMARY_TABLE_START_ROW + 3
     for _main_category, category_names in income_category_groups:
         income_summary_ws.row_dimensions[row_number].collapsed = True
@@ -1357,7 +1365,7 @@ def write_excel_output(
     monthly_summary_ws.column_dimensions["A"].width = MONTHLY_SUMMARY_COLUMN_WIDTHS["category"]
     for column_number in range(2, monthly_summary_ws.max_column + 1):
         monthly_summary_ws.column_dimensions[get_column_letter(column_number)].width = 14
-    income_summary_ws.column_dimensions["A"].width = MONTHLY_SUMMARY_COLUMN_WIDTHS["category"]
+    income_summary_ws.column_dimensions["A"].width = 38
     for column_number in range(2, income_summary_ws.max_column + 1):
         income_summary_ws.column_dimensions[get_column_letter(column_number)].width = 14
     cash_flow_summary_ws.column_dimensions["A"].width = 32

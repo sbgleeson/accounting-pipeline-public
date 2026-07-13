@@ -237,7 +237,8 @@ class MonthlySummaryReportTests(unittest.TestCase):
         self.assertEqual(worksheet["B4"].value, "=SUM(B5,B6)")
         self.assertEqual(
             worksheet["E4"].value,
-            '=IFERROR(SUMIFS(\'Categories & Budget\'!$G:$G,\'Categories & Budget\'!$A:$A,$A4),"")',
+            '=IF(COUNTIFS(\'Categories & Budget\'!$A:$A,$A4,\'Categories & Budget\'!$G:$G,"<>")=0,"",'
+            'IFERROR(SUMIFS(\'Categories & Budget\'!$G:$G,\'Categories & Budget\'!$A:$A,$A4),""))',
         )
         self.assertEqual(
             worksheet["F4"].value,
@@ -321,8 +322,17 @@ class MonthlySummaryReportTests(unittest.TestCase):
         self.assertEqual(worksheet["L1"].value, "Average variance")
         self.assertEqual(worksheet["A4"].value, "Income – Paycheck")
         self.assertEqual(worksheet["B4"].value, "=SUM(B5,B6)")
-        self.assertEqual(worksheet["E4"].value, '=IF(COUNT(E5,E6)=0,"",SUM(E5,E6))')
-        self.assertEqual(worksheet["F4"].value, '=IF(E4="","","min")')
+        self.assertEqual(
+            worksheet["E4"].value,
+            '=IF(COUNTIFS(\'Categories & Budget\'!$A:$A,$A4,\'Categories & Budget\'!$G:$G,"<>")>0,'
+            'IFERROR(SUMIFS(\'Categories & Budget\'!$G:$G,\'Categories & Budget\'!$A:$A,$A4),""),'
+            'IF(COUNT(E5,E6)=0,"",SUM(E5,E6)))',
+        )
+        self.assertEqual(
+            worksheet["F4"].value,
+            '=IF(E4="","",IFERROR(INDEX(\'Categories & Budget\'!$H:$H,'
+            'MATCH($A4,\'Categories & Budget\'!$A:$A,0)),"min"))',
+        )
         self.assertEqual(
             worksheet["G4"].value,
             '=IF(OR(E4="",F4=""),"",IF(F4="min",C4-E4,IF(F4="max",E4-C4,IF(F4="exact",-ABS(C4-E4),""))))',
