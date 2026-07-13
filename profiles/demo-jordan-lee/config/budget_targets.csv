@@ -1,10 +1,10 @@
 budget_label,reality_monthly,monthly_target,target_type,owner_bucket,notes
 Income – Paycheck,,3800,min,Personal,Synthetic demo income target
-Housing,,1650,max,Personal,Synthetic monthly housing plan
-Food,,700,max,Personal,Groceries dining and takeout combined
-Food – Groceries,,450,max,Personal,Synthetic grocery target
+Housing,,1650,max,Household,Synthetic shared household housing plan
+Food,,700,max,Household,Groceries dining and takeout combined for the household
+Food – Groceries,,450,max,Household,Synthetic household grocery target
 Food – Dining Out,,175,max,Personal,Synthetic dining target
-Food – Takeout / Delivery,,75,max,Personal,Synthetic takeout target
+Food – Takeout / Delivery,,75,max,Household,Synthetic household takeout target
 Auto + Transport,,200,max,Personal,Synthetic transportation target
 Entertainment,,100,max,Personal,Synthetic entertainment target
 Giving,,75,min,Personal,Synthetic giving goal

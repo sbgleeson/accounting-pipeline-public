@@ -265,7 +265,10 @@ class MonthlySummaryReportTests(unittest.TestCase):
             'transactions!$G$2:$G$171,">="&B$2,transactions!$G$2:$G$171,"<="&B$3))',
         )
         self.assertEqual(worksheet["D5"].value, "=SUM(B5,C5)")
-        self.assertEqual(worksheet["A10"].value, "Owner bucket")
+        self.assertEqual(worksheet["A10"].value, "Owner bucket summary")
+        self.assertEqual(worksheet["C10"].value, "Latest month")
+        self.assertEqual(worksheet["E10"].value, "YTD actual")
+        self.assertEqual(worksheet["G10"].value, "Monthly average")
         self.assertEqual(worksheet["A11"].value, "Family")
         self.assertNotIn("Credit", [worksheet[f"A{row_number}"].value for row_number in range(11, 14)])
         self.assertEqual(
@@ -275,6 +278,9 @@ class MonthlySummaryReportTests(unittest.TestCase):
             'transactions!$N$2:$N$171,"<>Transfers*",transactions!$N$2:$N$171,"<>Income*",'
             'transactions!$N$2:$N$171,"<>Financial – Credit Card Payment"))',
         )
+        self.assertEqual(worksheet["E11"].value, "=SUM(B11,C11)")
+        self.assertEqual(worksheet["G11"].value, '=IF(E11="","",E11/2)')
+        self.assertIsNone(worksheet["F10"].value)
 
     def test_get_spending_owner_buckets_excludes_credit_bucket(self) -> None:
         buckets = get_spending_owner_buckets(["Family", "Personal", "Credit", "Needs Review"])
