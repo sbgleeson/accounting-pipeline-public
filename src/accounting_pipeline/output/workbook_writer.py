@@ -219,16 +219,24 @@ CATEGORIES_BUDGET_COLUMN_WIDTHS = {
 }
 
 NEEDS_REVIEW_COLUMN_WIDTHS = {
-    "review_reason": 28,
+    "review_reason": 24,
+    "action": 20,
     "post_date": 13,
     "amount": 12,
-    "account_name": 24,
-    "description": 38,
-    "category": 32,
+    "account_name": 20,
+    "description": 34,
+    "category": 28,
     "category_source": 22,
     "owner_bucket": 14,
     "venmo_status": 14,
-    "review_note": 42,
+    "review_note": 62,
+}
+
+HIDDEN_NEEDS_REVIEW_COLUMNS = {
+    "category",
+    "category_source",
+    "owner_bucket",
+    "venmo_status",
 }
 
 SUMMARY_TABLE_START_ROW = 7
@@ -308,11 +316,11 @@ def populate_overview_sheet(
 
 def populate_needs_review_sheet(worksheet, review_rows: list[list[object]]) -> None:
     """Create one compact exception list for human review."""
-    worksheet.merge_cells("A1:J1")
+    worksheet.merge_cells("A1:K1")
     worksheet["A1"] = "Needs Review"
-    worksheet.merge_cells("A2:J2")
+    worksheet.merge_cells("A2:K2")
     worksheet["A2"] = (
-        "Items remain visible until their category, owner bucket, Venmo match, or statement coverage is resolved."
+        "Items remain visible until their category, owner bucket, payment-app match, or statement coverage is resolved."
     )
     worksheet.append([])
     worksheet.append(NEEDS_REVIEW_HEADERS)
@@ -894,8 +902,8 @@ def write_excel_output(
         for cell in row:
             cell.number_format = "$#,##0.00"
     for row_number in range(5, needs_review_ws.max_row + 1):
-        needs_review_ws[f"B{row_number}"].number_format = "mm/dd/yyyy"
-        needs_review_ws[f"C{row_number}"].number_format = "$#,##0.00"
+        needs_review_ws[f"C{row_number}"].number_format = "mm/dd/yyyy"
+        needs_review_ws[f"D{row_number}"].number_format = "$#,##0.00"
     if income_routing_ws is not None:
         for row_number in range(5, income_routing_summary_start_row):
             income_routing_ws[f"B{row_number}"].number_format = "mm/dd/yyyy"
@@ -1105,7 +1113,9 @@ def write_excel_output(
             fill = attention_fill
         for cell in needs_review_ws[row_number]:
             cell.fill = fill
-        needs_review_ws[f"J{row_number}"].alignment = Alignment(wrap_text=True)
+        for column_letter in ("A", "B", "E", "F", "G"):
+            needs_review_ws[f"{column_letter}{row_number}"].alignment = Alignment(wrap_text=True)
+        needs_review_ws[f"K{row_number}"].alignment = Alignment(wrap_text=True)
 
     if income_routing_ws is not None:
         income_routing_ws["A1"].fill = sheet_header_fill
@@ -1266,7 +1276,7 @@ def write_excel_output(
     categories_budget_ws.auto_filter.ref = (
         f"A1:{get_column_letter(categories_budget_ws.max_column)}{categories_budget_ws.max_row}"
     )
-    needs_review_ws.auto_filter.ref = f"A4:J{needs_review_ws.max_row}"
+    needs_review_ws.auto_filter.ref = f"A4:K{needs_review_ws.max_row}"
     if income_routing_ws is not None and income_routing_summary_start_row > 5:
         income_routing_ws.auto_filter.ref = (
             f"A4:N{income_routing_summary_start_row - 1}"
@@ -1313,6 +1323,10 @@ def write_excel_output(
         needs_review_ws.column_dimensions[
             get_column_letter(NEEDS_REVIEW_HEADERS.index(column_name) + 1)
         ].width = width
+    for column_name in HIDDEN_NEEDS_REVIEW_COLUMNS:
+        needs_review_ws.column_dimensions[
+            get_column_letter(NEEDS_REVIEW_HEADERS.index(column_name) + 1)
+        ].hidden = True
 
     for column_name, width in TRANSACTION_COLUMN_WIDTHS.items():
         transactions_ws.column_dimensions[get_column_letter(OUTPUT_COLUMNS.index(column_name) + 1)].width = width

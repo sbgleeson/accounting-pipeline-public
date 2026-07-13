@@ -49,9 +49,11 @@ class WorkbookFrontMatterTests(unittest.TestCase):
         review_rows = build_needs_review_rows(rows, accounts, {})
 
         self.assertEqual(len(review_rows), 2)
-        self.assertIn("Uncategorized transaction", review_rows[0][0])
-        self.assertIn("Unmatched Venmo activity", review_rows[0][0])
+        self.assertEqual(review_rows[0][0], "Unmatched Venmo activity")
+        self.assertEqual(review_rows[0][1], "Check payment-app match")
+        self.assertEqual(review_rows[0][6], "Uncategorized – Needs Review")
         self.assertEqual(review_rows[1][0], "Statement metadata unavailable")
+        self.assertEqual(review_rows[1][1], "Add statement PDF")
 
     def test_overview_metrics_keep_income_spending_and_transfers_distinct(self) -> None:
         rows = [

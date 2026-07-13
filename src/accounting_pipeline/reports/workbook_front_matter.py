@@ -8,6 +8,7 @@ from accounting_pipeline.utils import parse_date
 
 NEEDS_REVIEW_HEADERS = [
     "review_reason",
+    "action",
     "post_date",
     "amount",
     "account_name",
@@ -23,13 +24,26 @@ NEEDS_REVIEW_HEADERS = [
 def get_transaction_review_reasons(row: Transaction) -> list[str]:
     """Return visible exception reasons for one transaction."""
     reasons = []
+    if row.venmo_match_status == "unmatched":
+        return ["Unmatched Venmo activity"]
     if row.category == "Uncategorized – Needs Review":
         reasons.append("Uncategorized transaction")
     if row.owner_bucket == "Needs Review":
         reasons.append("Owner bucket needs review")
-    if row.venmo_match_status == "unmatched":
-        reasons.append("Unmatched Venmo activity")
     return reasons
+
+
+def get_review_actions(review_reasons: list[str]) -> list[str]:
+    """Return action-oriented labels for review reasons."""
+    if "Unmatched Venmo activity" in review_reasons:
+        return ["Check payment-app match"]
+
+    actions = []
+    if "Uncategorized transaction" in review_reasons:
+        actions.append("Assign category")
+    if "Owner bucket needs review" in review_reasons:
+        actions.append("Confirm owner bucket")
+    return actions or ["Review source detail"]
 
 
 def build_needs_review_rows(
@@ -46,6 +60,7 @@ def build_needs_review_rows(
         review_rows.append(
             [
                 "; ".join(reasons),
+                "; ".join(get_review_actions(reasons)),
                 parse_date(row.post_date),
                 row.amount,
                 row.account_name,
@@ -64,6 +79,7 @@ def build_needs_review_rows(
         review_rows.append(
             [
                 "Statement metadata unavailable",
+                "Add statement PDF",
                 None,
                 None,
                 account.account_name,
