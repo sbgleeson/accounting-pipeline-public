@@ -136,7 +136,7 @@ Generated output files are safe to regenerate. Durable decisions belong in profi
 - `config/reviewed_transactions.csv`: exact one-off category decisions.
 - `config/categories.csv`: allowed category list.
 - `config/income_sources.csv`: income source matching rules.
-- `config/budget_targets.csv`: budget reality, goals, target behavior, owner bucket, review status, and notes.
+- `config/budget_targets.csv`: budget reality, goals, target behavior, owner bucket, and notes.
 - `config/profile_settings.csv`: optional profile-level reporting settings.
 
 Do not hide uncertain rows. If a row is unmatched, uncategorized, or unclear, keep it visible until a person decides how to handle it.
@@ -154,16 +154,17 @@ profiles/my-family/config/budget_targets.csv
 Columns:
 
 - `budget_label`: main category or combined category label.
-- `reality_monthly`: discussed current baseline or historical reality.
-- `monthly_target`: goal used by workbook budget comparisons.
+- `reality_monthly`: optional manual baseline; the workbook fills `Reality` from loaded monthly averages when available.
+- `monthly_target`: goal used by workbook budget comparisons; may be a number or an Excel formula beginning with `=`.
 - `target_type`: `max`, `min`, `exact`, or `review`.
 - `owner_bucket`: optional owner bucket.
-- `review_status`: `draft`, `agreed`, `needs_review`, or `one_time_or_irregular`.
 - `notes`: rationale for the target.
 
-The pipeline calculates actual spending from transactions. `reality_monthly` is for the human baseline you discussed and want to preserve.
+The pipeline calculates actual spending from transactions. In the generated workbook, `Reality` is a formula-driven monthly average from the loaded spending and income summary sheets when the label appears there.
 
 Expected income also belongs in `budget_targets.csv`. Use the specific income-source label from the workbook or `categories.csv`, such as `Income – Paycheck: Demo Employer`, set `monthly_target` to the expected monthly amount, and use `target_type` of `min`. The `Income Summary` rolls those income-source targets up to parent rows such as `Income – Paycheck`, and surfaces the parent rollups as expected monthly income.
+
+Savings and investing targets can reference expected income instead of being hard-coded. For example, an investing target can use a workbook formula based on `Income – Paycheck`, with a note such as `Target is 10% of expected income; adjust percentage as desired`. Emergency fund savings can use the same pattern while the fund is being built, with a note to set the target to `0` once the fund is filled.
 
 ## 8. Repeat Monthly
 

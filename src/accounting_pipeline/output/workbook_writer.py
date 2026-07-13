@@ -200,7 +200,6 @@ CATEGORIES_BUDGET_HEADERS = [
     "monthly_target",
     "target_type",
     "owner_bucket",
-    "review_status",
     "notes",
 ]
 
@@ -214,7 +213,6 @@ CATEGORIES_BUDGET_COLUMN_WIDTHS = {
     "monthly_target": 15,
     "target_type": 12,
     "owner_bucket": 14,
-    "review_status": 14,
     "notes": 52,
 }
 
@@ -377,6 +375,16 @@ def get_default_budget_target_type(main_category: str) -> str:
     return "max"
 
 
+def get_budget_target_value(target: dict[str, str], field_name: str) -> float | str:
+    """Return a budget target field as a number or supported workbook formula."""
+    value = target.get(field_name, "")
+    if not value:
+        return ""
+    if isinstance(value, str) and value.startswith("="):
+        return value
+    return float(value)
+
+
 def populate_categories_budget_sheet(
     worksheet,
     category_rows: list[dict[str, str]],
@@ -398,7 +406,6 @@ def populate_categories_budget_sheet(
         "Monthly target",
         "Target type",
         "Owner bucket",
-        "Review status",
         "Notes",
     ]
     for column_number, header in enumerate(human_headers, start=1):
@@ -418,11 +425,10 @@ def populate_categories_budget_sheet(
                     main_category,
                     "",
                     "",
-                    float(target["reality_monthly"]) if target.get("reality_monthly") else "",
-                    float(target["monthly_target"]) if target.get("monthly_target") else "",
+                    get_budget_target_value(target, "reality_monthly"),
+                    get_budget_target_value(target, "monthly_target"),
                     target.get("target_type") or get_default_budget_target_type(main_category),
                     target.get("owner_bucket", ""),
-                    target.get("review_status", ""),
                     target.get("notes", ""),
                 ]
             )
@@ -437,11 +443,10 @@ def populate_categories_budget_sheet(
                 main_category,
                 category_row["sub_category"],
                 combined,
-                float(target["reality_monthly"]) if target.get("reality_monthly") else "",
-                float(target["monthly_target"]) if target.get("monthly_target") else "",
+                get_budget_target_value(target, "reality_monthly"),
+                get_budget_target_value(target, "monthly_target"),
                 target.get("target_type") or get_default_budget_target_type(main_category),
                 target.get("owner_bucket", ""),
-                target.get("review_status", ""),
                 target.get("notes", ""),
             ]
         )
@@ -457,13 +462,24 @@ def populate_categories_budget_sheet(
                 label.split(" – ", 1)[0],
                 "",
                 "",
-                float(target["reality_monthly"]) if target.get("reality_monthly") else "",
-                float(target["monthly_target"]),
+                get_budget_target_value(target, "reality_monthly"),
+                get_budget_target_value(target, "monthly_target"),
                 target.get("target_type") or "review",
                 target.get("owner_bucket", ""),
-                target.get("review_status", ""),
                 target.get("notes", ""),
             ]
+        )
+
+
+def populate_categories_budget_reality_formulas(worksheet, average_column_letter: str) -> None:
+    """Populate budget reality from existing summary monthly-average rows."""
+    reality_column = CATEGORIES_BUDGET_HEADERS.index("reality_monthly") + 1
+    for row_number in range(2, worksheet.max_row + 1):
+        worksheet.cell(row=row_number, column=reality_column).value = (
+            f'=IFERROR(INDEX(\'Income Summary\'!${average_column_letter}:${average_column_letter},'
+            f'MATCH($A{row_number},\'Income Summary\'!$A:$A,0)),'
+            f'IFERROR(INDEX(\'Spending Summary\'!${average_column_letter}:${average_column_letter},'
+            f'MATCH($A{row_number},\'Spending Summary\'!$A:$A,0)),""))'
         )
 
 
@@ -599,14 +615,6 @@ def write_excel_output(
     budget_bucket_validation = DataValidation(type="list", formula1="=AllOwnerBuckets", allow_blank=True)
     categories_budget_ws.add_data_validation(budget_bucket_validation)
     budget_bucket_validation.add(f"I2:I{last_categories_budget_row}")
-
-    budget_review_status_validation = DataValidation(
-        type="list",
-        formula1='"draft,agreed,needs_review,one_time_or_irregular"',
-        allow_blank=True,
-    )
-    categories_budget_ws.add_data_validation(budget_review_status_validation)
-    budget_review_status_validation.add(f"J2:J{last_categories_budget_row}")
 
     transactions_ws = workbook.create_sheet("transactions")
     transactions_ws.append(OUTPUT_COLUMNS)
@@ -784,6 +792,8 @@ def write_excel_output(
     target_letter = get_column_letter(target_column)
     average_letter = get_column_letter(average_column)
     ytd_variance_letter = get_column_letter(ytd_variance_column)
+    average_column_letter = get_column_letter(average_column)
+    populate_categories_budget_reality_formulas(categories_budget_ws, average_column_letter)
 
     spending_main_rows = get_group_main_rows(category_groups)
     income_main_rows = get_group_main_rows(income_category_groups)
@@ -1154,7 +1164,7 @@ def write_excel_output(
         main_category = categories_budget_ws[f"C{row_number}"].value
         if main_category in category_fills:
             categories_budget_ws[f"A{row_number}"].fill = category_fills[str(main_category)]
-        for column_letter in ("F", "G", "H", "I", "J", "K"):
+        for column_letter in ("F", "G", "H", "I", "J"):
             categories_budget_ws[f"{column_letter}{row_number}"].fill = editable_fill
         if categories_budget_ws[f"B{row_number}"].value == "main_category":
             categories_budget_ws[f"G{row_number}"].fill = primary_budget_fill
