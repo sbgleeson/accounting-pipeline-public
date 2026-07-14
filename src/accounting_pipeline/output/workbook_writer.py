@@ -145,6 +145,16 @@ VENMO_ACTIVITY_COLUMN_WIDTHS = {
     "bank_source_file": 26,
 }
 
+HIDDEN_VENMO_ACTIVITY_COLUMNS = {
+    "venmo_datetime",
+    "venmo_id",
+    "status",
+    "funding_source",
+    "destination",
+    "source_file",
+    "bank_source_file",
+}
+
 RECONCILIATION_COLUMN_WIDTHS = {
     "account_id": 10,
     "account_name": 18,
@@ -536,6 +546,35 @@ def populate_venmo_activity_sheet(
                 linked_row.source_file if linked_row else "",
             ]
         )
+
+
+def get_reconciliation_status_for_row(
+    reconciliation_row: int,
+    reconciliation_ws,
+    rows: list[Transaction],
+) -> str:
+    """Return the initial reconciliation status used to pre-style generated workbooks."""
+    account_id = reconciliation_ws[f"A{reconciliation_row}"].value
+    account_type = reconciliation_ws[f"C{reconciliation_row}"].value
+    start_date = reconciliation_ws[f"D{reconciliation_row}"].value
+    end_date = reconciliation_ws[f"E{reconciliation_row}"].value
+    opening_balance = reconciliation_ws[f"F{reconciliation_row}"].value
+    closing_balance = reconciliation_ws[f"G{reconciliation_row}"].value
+    if not all((account_id, account_type, start_date, end_date, opening_balance is not None, closing_balance is not None)):
+        return ""
+
+    net_activity = sum(
+        (
+            row.amount
+            for row in rows
+            if row.account_id == account_id and start_date <= parse_date(row.post_date) <= end_date
+        ),
+        Decimal("0.00"),
+    )
+    opening = Decimal(str(opening_balance))
+    closing = Decimal(str(closing_balance))
+    expected_closing = opening - net_activity if account_type == "credit_card" else opening + net_activity
+    return "OK" if abs(closing - expected_closing) < Decimal("0.01") else "Review"
 
 
 def write_excel_output(
@@ -968,7 +1007,6 @@ def write_excel_output(
                 cell.number_format = "$#,##0.00"
 
     sheet_header_fill = PatternFill(fill_type="solid", fgColor="1F4E78")
-    editable_fill = PatternFill(fill_type="solid", fgColor="FFF2CC")
     primary_budget_fill = PatternFill(fill_type="solid", fgColor="F4B183")
     reference_fill = PatternFill(fill_type="solid", fgColor="D9EAD3")
     warning_fill = PatternFill(fill_type="solid", fgColor="F4CCCC")
@@ -1155,31 +1193,20 @@ def write_excel_output(
         ):
             income_routing_ws[f"F{row_number}"].alignment = Alignment(wrap_text=True)
 
-    for row_number in range(2, len(configured_accounts) + 2):
-        accounts_ws[f"D{row_number}"].fill = editable_fill
-        reconciliation_ws[f"D{row_number}"].fill = editable_fill
-        reconciliation_ws[f"E{row_number}"].fill = editable_fill
-        reconciliation_ws[f"F{row_number}"].fill = editable_fill
-        reconciliation_ws[f"G{row_number}"].fill = editable_fill
-
     for row_number in range(2, categories_budget_ws.max_row + 1):
         main_category = categories_budget_ws[f"C{row_number}"].value
         if main_category in category_fills:
             categories_budget_ws[f"A{row_number}"].fill = category_fills[str(main_category)]
-        for column_letter in ("F", "G", "H", "I", "J"):
-            categories_budget_ws[f"{column_letter}{row_number}"].fill = editable_fill
         if categories_budget_ws[f"B{row_number}"].value == "main_category":
             categories_budget_ws[f"G{row_number}"].fill = primary_budget_fill
             categories_budget_ws[f"H{row_number}"].fill = primary_budget_fill
 
     if last_transaction_row >= 2:
         for row_number in range(2, last_transaction_row + 1):
-            transactions_ws[f"{owner_bucket_column_letter}{row_number}"].fill = editable_fill
-            transactions_ws[f"{category_column_letter}{row_number}"].fill = editable_fill
             internal_transfer_column_letter = get_column_letter(OUTPUT_COLUMNS.index("is_internal_transfer") + 1)
             if transactions_ws[f"{internal_transfer_column_letter}{row_number}"].value == "true":
                 for column_index in range(1, len(OUTPUT_COLUMNS) + 1):
-                    transactions_ws[f"{get_column_letter(column_index)}{row_number}"].fill = reference_fill
+                    transactions_ws[f"{get_column_letter(column_index)}{row_number}"].fill = neutral_fill
             category_value = transactions_ws[f"{category_column_letter}{row_number}"].value
             if category_value:
                 main_category = get_main_category(str(category_value))
@@ -1189,6 +1216,34 @@ def write_excel_output(
                 transactions_ws[f"{category_column_letter}{row_number}"].fill = warning_fill
             if transactions_ws[f"{owner_bucket_column_letter}{row_number}"].value == "Needs Review":
                 transactions_ws[f"{owner_bucket_column_letter}{row_number}"].fill = warning_fill
+
+    bank_link_status_column_letter = get_column_letter(VENMO_ACTIVITY_HEADERS.index("bank_link_status") + 1)
+    for row_number in range(2, venmo_activity_ws.max_row + 1):
+        if venmo_activity_ws[f"{bank_link_status_column_letter}{row_number}"].value == "not_linked":
+            venmo_activity_ws[f"{bank_link_status_column_letter}{row_number}"].fill = warning_fill
+
+    reconciliation_status_column_letter = get_column_letter(RECONCILIATION_HEADERS.index("status") + 1)
+    for row_number in range(2, reconciliation_ws.max_row + 1):
+        status_cell = reconciliation_ws[f"{reconciliation_status_column_letter}{row_number}"]
+        status_cell.font = dark_bold_font
+        status_cell.alignment = Alignment(horizontal="center")
+        initial_status = get_reconciliation_status_for_row(row_number, reconciliation_ws, sorted_rows)
+        if initial_status == "OK":
+            status_cell.fill = reference_fill
+        elif initial_status == "Review":
+            status_cell.fill = warning_fill
+    reconciliation_status_range = (
+        f"{reconciliation_status_column_letter}2:"
+        f"{reconciliation_status_column_letter}{reconciliation_ws.max_row}"
+    )
+    reconciliation_ws.conditional_formatting.add(
+        reconciliation_status_range,
+        CellIsRule(operator="equal", formula=['"OK"'], fill=reference_fill),
+    )
+    reconciliation_ws.conditional_formatting.add(
+        reconciliation_status_range,
+        CellIsRule(operator="equal", formula=['"Review"'], fill=warning_fill),
+    )
 
     monthly_summary_main_rows = []
     row_number = SUMMARY_TABLE_START_ROW + 3
@@ -1287,6 +1342,10 @@ def write_excel_output(
     categories_budget_ws.sheet_view.zoomScale = 100
     categories_budget_ws.sheet_view.showGridLines = False
     venmo_activity_ws.freeze_panes = "A2"
+    if venmo_activity_ws.max_row >= 1:
+        venmo_activity_ws.auto_filter.ref = (
+            f"A1:{get_column_letter(venmo_activity_ws.max_column)}{venmo_activity_ws.max_row}"
+        )
     reconciliation_ws.freeze_panes = "A2"
     cash_flow_summary_ws.freeze_panes = f"B{SUMMARY_TABLE_START_ROW + 3}"
     income_summary_ws.freeze_panes = f"B{SUMMARY_TABLE_START_ROW + 3}"
@@ -1358,6 +1417,10 @@ def write_excel_output(
         venmo_activity_ws.column_dimensions[
             get_column_letter(VENMO_ACTIVITY_HEADERS.index(column_name) + 1)
         ].width = width
+    for column_name in HIDDEN_VENMO_ACTIVITY_COLUMNS:
+        venmo_activity_ws.column_dimensions[
+            get_column_letter(VENMO_ACTIVITY_HEADERS.index(column_name) + 1)
+        ].hidden = True
 
     for column_name, width in RECONCILIATION_COLUMN_WIDTHS.items():
         reconciliation_ws.column_dimensions[

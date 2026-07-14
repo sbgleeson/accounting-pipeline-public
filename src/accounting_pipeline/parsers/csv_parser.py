@@ -67,6 +67,7 @@ def iter_transaction_csv_files(paths: PipelinePaths | None = None) -> list[Path]
         if path.is_file()
         and path.suffix.lower() == ".csv"
         and not path.name.lower().startswith("venmostatement_")
+        and path.name.lower() != "statement_metadata.csv"
     )
 
 

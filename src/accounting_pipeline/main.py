@@ -14,6 +14,10 @@ from accounting_pipeline.output.csv_writer import write_output
 from accounting_pipeline.output.workbook_writer import write_excel_output
 from accounting_pipeline.parsers.csv_parser import load_rows_with_summary
 from accounting_pipeline.parsers.pdf_parser import extract_statement_metadata_with_summary
+from accounting_pipeline.parsers.statement_metadata_csv import (
+    load_statement_metadata_csv,
+    merge_statement_metadata,
+)
 from accounting_pipeline.parsers.venmo_parser import load_venmo_activities
 from accounting_pipeline.transforms.categorization import assign_categories
 from accounting_pipeline.transforms.transfers import match_internal_transfers
@@ -60,7 +64,8 @@ def run_pipeline(paths: PipelinePaths | None = None) -> None:
 
     logger.info("Extracting statement metadata from PDFs")
     statement_result = extract_statement_metadata_with_summary(active_paths)
-    statement_metadata = statement_result.statement_metadata
+    csv_statement_metadata = load_statement_metadata_csv(active_paths)
+    statement_metadata = merge_statement_metadata(statement_result.statement_metadata, csv_statement_metadata)
     statement_period_count = statement_result.parsed_count
     logger.info(
         "Statement PDF summary: found %s PDFs, parsed %s statement periods, skipped %s PDFs",
@@ -70,6 +75,9 @@ def run_pipeline(paths: PipelinePaths | None = None) -> None:
     )
     for skipped_pdf in statement_result.skipped_pdfs:
         logger.warning("Skipped statement PDF: %s", skipped_pdf)
+    if csv_statement_metadata:
+        csv_period_count = sum(len(metadata_rows) for metadata_rows in csv_statement_metadata.values())
+        logger.info("Loaded %s statement periods from statement_metadata.csv", csv_period_count)
 
     logger.info("Matching internal transfers")
     match_internal_transfers(rows)

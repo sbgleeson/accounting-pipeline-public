@@ -12,6 +12,7 @@ It includes:
 - payroll and interest income
 - internal savings transfers and credit-card payments
 - matched and unmatched Venmo activity
+- synthetic statement metadata for reconciliation
 - a refund that offsets spending
 - savings, investing, giving, and uncategorized review items
 
