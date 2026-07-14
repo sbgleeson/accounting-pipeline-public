@@ -59,6 +59,8 @@ Start with these tabs:
 
 Some technical columns are hidden in review tabs but remain in the workbook for auditability. The `categories` and `accounts` tabs are hidden reference tabs used for dropdowns and workbook formulas.
 
+If statement PDFs are unavailable, add statement dates and balances to `profiles/my-family/raw/statement_metadata.csv`.
+
 ## 4. Feed Back Corrections
 
 This part is not finalized yet. Likely feedback paths:

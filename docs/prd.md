@@ -36,7 +36,7 @@ Personal accounting review currently depends on bank and card exports, Venmo act
 
 ### Local Ingestion
 
-Read source files recursively from a selected `profiles/<name>/raw/` directory, including bank CSVs, credit-card CSVs, Venmo statement CSVs, and statement PDFs for configured accounts. The legacy `input/raw/` location remains supported for backward compatibility.
+Read source files recursively from a selected `profiles/<name>/raw/` directory, including bank CSVs, credit-card CSVs, Venmo statement CSVs, optional statement metadata CSVs, and statement PDFs for configured accounts. The legacy `input/raw/` location remains supported for backward compatibility.
 
 ### Profile Isolation
 
@@ -103,7 +103,7 @@ Generate `profiles/<name>/output/normalized_transactions.csv` with the same norm
 - [ ] Transactions include account metadata, canonical merchant, category, category source, owner bucket, source file, and Venmo traceability fields where relevant.
 - [ ] Internal transfers are marked and excluded from normal spending review where appropriate.
 - [ ] Uncategorized or owner-bucket review items are visibly highlighted in the workbook.
-- [ ] Statement metadata from PDFs feeds the reconciliation sheet when `pdfplumber` is available.
+- [ ] Statement metadata from `raw/statement_metadata.csv` or PDFs feeds the reconciliation sheet when available.
 - [ ] The automated test suite passes locally.
 
 ## Open Questions

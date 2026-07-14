@@ -126,6 +126,13 @@ Start with:
 - `venmo_activity`: raw Venmo export activity with bank link status.
 - `reconciliation`: statement metadata and transaction coverage checks.
 
+If statement PDFs are unavailable or hard to parse, add `raw/statement_metadata.csv` with:
+
+```csv
+account_id,statement_start_date,statement_end_date,opening_balance,closing_balance
+4101,2026-01-01,2026-01-31,2500.00,3980.53
+```
+
 Older month columns and subcategory rows may be grouped or collapsed. Expand them when you need history.
 
 ## 6. Feed Back Corrections
